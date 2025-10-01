@@ -24,14 +24,19 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0+</project_license>
   
+  <developer id="com.andrewstclair">
+    <name>Andrew St. Clair</name>
+  </developer>
+  
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/yourusername/gnome-wardrive/main/data/screenshots/main-window.png</image>
+      <caption>Main window showing WiFi network scanning</caption>
+      <image>https://raw.githubusercontent.com/andrew-stclair/gnome-wardrive/main/data/screenshots/main-window.png</image>
     </screenshot>
   </screenshots>
   
-  <url type="homepage">https://github.com/yourusername/gnome-wardrive</url>
-  <url type="bugtracker">https://github.com/yourusername/gnome-wardrive/issues</url>
+  <url type="homepage">https://github.com/andrew-stclair/gnome-wardrive</url>
+  <url type="bugtracker">https://github.com/andrew-stclair/gnome-wardrive/issues</url>
   
   <categories>
     <category>Network</category>
@@ -65,7 +70,7 @@
   <content_rating type="oars-1.1"/>
   
   <releases>
-    <release version="1.0.0" date="2025-01-01">
+    <release version="1.0.0" date="2024-12-01">
       <description>
         <p>Initial release of GNOME Wardrive</p>
         <ul>

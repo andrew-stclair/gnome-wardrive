@@ -12,7 +12,7 @@ echo "=================================================="
 if command -v apt >/dev/null 2>&1; then
     PKG_MANAGER="apt"
     INSTALL_CMD="sudo apt install -y"
-    PACKAGES="python3-gi python3-gi-cairo gir1.2-gtk-4.0 gir1.2-adw-1 gir1.2-nm-1.0 gir1.2-geoclue-2.0 meson ninja-build appstream-util desktop-file-utils glib-compile-schemas flatpak flatpak-builder"
+    PACKAGES="python3-gi python3-gi-cairo gir1.2-gtk-4.0 gir1.2-adw-1 gir1.2-nm-1.0 gir1.2-geoclue-2.0 meson ninja-build appstream-util desktop-file-utils libglib2.0-bin flatpak flatpak-builder"
 elif command -v dnf >/dev/null 2>&1; then
     PKG_MANAGER="dnf"
     INSTALL_CMD="sudo dnf install -y"
@@ -42,7 +42,7 @@ if ! flatpak remote-list | grep -q flathub; then
 fi
 
 echo "Installing GNOME Platform runtime..."
-flatpak install -y flathub org.gnome.Platform//48 org.gnome.Sdk//48
+flatpak install -y flathub org.gnome.Platform//46 org.gnome.Sdk//46
 
 # Test the setup
 echo "Testing setup..."

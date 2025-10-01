@@ -35,7 +35,7 @@ The app continuously monitors NetworkManager's cache of visible access points, w
 - NetworkManager
 - GeoClue2
 - PyGObject
-- GNOME Platform 48 (for Flatpak builds)
+- GNOME Platform 46 (for Flatpak builds)
 
 ## Building
 
