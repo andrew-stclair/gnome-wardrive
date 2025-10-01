@@ -16,8 +16,8 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install -y python3-gi gir1.2-gtk-4.0 gir1.2-adw-1 gir1.2-nm-1.0 \
-          gir1.2-geoclue-2.0 meson ninja-build python3-requests python3-gpxpy
+        sudo apt install -y python3-gi libgtk-4-dev libadwaita-1-dev gir1.2-gtk-4.0 \
+          gir1.2-adw-1 gir1.2-nm-1.0 gir1.2-geoclue-2.0 meson ninja-build python3-requests python3-gpxpy
     
     - name: Build and test
       run: |
