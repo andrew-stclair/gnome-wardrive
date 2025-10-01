@@ -25,6 +25,7 @@ jobs:
           gir1.2-geoclue-2.0 \
           libgtk-4-dev \
           libadwaita-1-dev \
+          python-gi-dev \
           meson \
           ninja-build \
           appstream-util \
