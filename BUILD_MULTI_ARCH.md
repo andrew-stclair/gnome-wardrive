@@ -64,7 +64,7 @@ strategy:
 
 ### Manifest Compatibility
 - **Architecture Independent**: Pure Python application with no arch-specific dependencies
-- **Runtime Support**: GNOME Platform 46 supports both x86_64 and aarch64
+- **Runtime Support**: GNOME Platform 47 supports both x86_64 and aarch64
 - **Native Libraries**: GTK4, NetworkManager, GeoClue available on both architectures
 
 ## 📦 User Experience
@@ -105,7 +105,7 @@ strategy:
 Host machine cpu family: aarch64
 ✅ Manifest YAML syntax is valid
 App ID: com.andrewstclair.Wardrive
-Runtime: org.gnome.Platform 46
+Runtime: org.gnome.Platform 47
 ✅ Ready for multi-architecture builds!
 ```
 

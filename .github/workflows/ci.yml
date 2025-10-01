@@ -50,7 +50,7 @@ jobs:
   flatpak:
     runs-on: ubuntu-latest
     container:
-      image: bilelmoussaoui/flatpak-github-actions:gnome-46
+      image: bilelmoussaoui/flatpak-github-actions:gnome-nightly
       options: --privileged
     strategy:
       matrix:
@@ -95,7 +95,7 @@ jobs:
         echo "Build Number: ${{ github.run_number }}" >> build-info-${{ matrix.arch }}.txt
         echo "Build Date: $(date -u)" >> build-info-${{ matrix.arch }}.txt
         echo "Architecture: ${{ matrix.arch }}" >> build-info-${{ matrix.arch }}.txt
-        echo "GNOME Platform: 46" >> build-info-${{ matrix.arch }}.txt
+        echo "GNOME Platform: 47" >> build-info-${{ matrix.arch }}.txt
         echo "" >> build-info-${{ matrix.arch }}.txt
         echo "Installation Instructions:" >> build-info-${{ matrix.arch }}.txt
         echo "1. Download the .flatpak file" >> build-info-${{ matrix.arch }}.txt
@@ -120,7 +120,7 @@ jobs:
         echo "✅ **Build Status**: Success" >> $GITHUB_STEP_SUMMARY
         echo "🏗️ **Architecture**: ${{ matrix.arch }}" >> $GITHUB_STEP_SUMMARY
         echo "📋 **Artifact Name**: gnome-wardrive-flatpak-${{ matrix.arch }}-${{ github.run_number }}-${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
-        echo "🏷️ **GNOME Platform**: 46" >> $GITHUB_STEP_SUMMARY
+        echo "🏷️ **GNOME Platform**: 47" >> $GITHUB_STEP_SUMMARY
         echo "📅 **Build Date**: $(date -u)" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### 🚀 Testing Instructions" >> $GITHUB_STEP_SUMMARY

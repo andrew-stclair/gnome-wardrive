@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: bilelmoussaoui/flatpak-github-actions:gnome-46
+      image: bilelmoussaoui/flatpak-github-actions:gnome-nightly
       options: --privileged
     strategy:
       matrix:
@@ -84,7 +84,7 @@ jobs:
           ### 🔧 System Requirements
           
           - Flatpak runtime support
-          - GNOME Platform 46
+          - GNOME Platform 47
           - NetworkManager (for WiFi scanning)
           - GeoClue2 (for GPS location)
           

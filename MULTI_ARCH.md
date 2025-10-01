@@ -113,7 +113,7 @@ flatpak run com.andrewstclair.Wardrive
 ### System Integration
 - **NetworkManager**: Cross-architecture D-Bus compatibility
 - **GeoClue**: Location services work identically across architectures  
-- **Flatpak Runtime**: GNOME Platform 46 supports both architectures natively
+- **Flatpak Runtime**: GNOME Platform 47 supports both architectures natively
 
 ### Data Format Compatibility
 - **Export Files**: CSV, KML, GPX files are identical across architectures
@@ -135,10 +135,10 @@ flatpak run com.andrewstclair.Wardrive
 
 ### Missing Dependencies
 **Symptoms**: Application fails to start with missing library errors
-**Solution**: Install GNOME Platform 46 runtime:
+**Solution**: Install GNOME Platform 47 runtime:
 ```bash
-flatpak install org.gnome.Platform//{arch}/46
-flatpak install org.gnome.Sdk//{arch}/46  # For development
+flatpak install org.gnome.Platform//{arch}/47
+flatpak install org.gnome.Sdk//{arch}/47  # For development
 ```
 
 ### Cross-Architecture Installation
