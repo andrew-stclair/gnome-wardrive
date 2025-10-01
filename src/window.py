@@ -13,9 +13,14 @@ try:
     from .location_service import LocationService
     from .data_manager import DataManager
 except ImportError:
-    from wifi_scanner import WiFiScanner
-    from location_service import LocationService
-    from data_manager import DataManager
+    try:
+        from gnome_wardrive.wifi_scanner import WiFiScanner
+        from gnome_wardrive.location_service import LocationService
+        from gnome_wardrive.data_manager import DataManager
+    except ImportError:
+        from wifi_scanner import WiFiScanner
+        from location_service import LocationService
+        from data_manager import DataManager
 
 @Gtk.Template(resource_path='/com/andrewstclair/Wardrive/ui/window_mobile.ui')
 class WardriveWindow(Adw.ApplicationWindow):

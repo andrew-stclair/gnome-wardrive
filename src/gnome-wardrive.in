@@ -19,10 +19,10 @@ gettext.install('gnome-wardrive', localedir)
 
 if __name__ == '__main__':
     import gi
-
     from gi.repository import Gio
     
-    # Try multiple possible locations for the gresource file
+    # Load gresource BEFORE importing the application modules
+    # This is critical because the window template decorators require the gresource to be loaded
     possible_paths = [
         os.path.join(pkgdatadir, 'gnome-wardrive.gresource'),
         '/app/share/gnome-wardrive/gnome-wardrive.gresource',  # Flatpak path
@@ -42,6 +42,9 @@ if __name__ == '__main__':
     
     if not resource_loaded:
         print("Warning: Could not load gresource file. UI may not display correctly.")
+        print(f"Searched paths: {possible_paths}")
+        print(f"pkgdatadir contents: {os.listdir(pkgdatadir) if os.path.exists(pkgdatadir) else 'Directory not found'}")
 
+    # Now import the application modules after gresource is loaded
     from gnome_wardrive.main import main
     sys.exit(main())

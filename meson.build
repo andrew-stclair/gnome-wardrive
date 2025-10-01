@@ -29,7 +29,7 @@ conf = configuration_data()
 conf.set('PYTHON', py_installation.full_path())
 conf.set('VERSION', meson.project_version())
 conf.set('localedir', get_option('prefix') / get_option('localedir'))
-conf.set('pkgdatadir', pkgdatadir)
+conf.set('pkgdatadir', get_option('prefix') / pkgdatadir)
 
 # Subdirectories
 subdir('data')

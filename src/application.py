@@ -11,7 +11,10 @@ from gi.repository import Gtk, Adw, Gio, GLib
 try:
     from .window import WardriveWindow
 except ImportError:
-    from window import WardriveWindow
+    try:
+        from gnome_wardrive.window import WardriveWindow
+    except ImportError:
+        from window import WardriveWindow
 
 class WardriveApplication(Adw.Application):
     """Main application class"""

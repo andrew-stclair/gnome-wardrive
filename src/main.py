@@ -14,7 +14,10 @@ gi.require_version('NM', '1.0')
 gi.require_version('Geoclue', '2.0')
 
 from gi.repository import Gtk, Adw, Gio, GLib
-from .application import WardriveApplication
+try:
+    from .application import WardriveApplication
+except ImportError:
+    from gnome_wardrive.application import WardriveApplication
 
 def main():
     """Main function to run the application"""
