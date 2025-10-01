@@ -26,12 +26,12 @@
   
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/yourusername/gnome-wardrive/main/data/screenshots/main-window.png</image>
+      <image>https://raw.githubusercontent.com/andrew-stclair/gnome-wardrive/main/data/screenshots/main-window.png</image>
     </screenshot>
   </screenshots>
   
-  <url type="homepage">https://github.com/yourusername/gnome-wardrive</url>
-  <url type="bugtracker">https://github.com/yourusername/gnome-wardrive/issues</url>
+  <url type="homepage">https://github.com/andrew-stclair/gnome-wardrive</url>
+  <url type="bugtracker">https://github.com/andrew-stclair/gnome-wardrive/issues</url>
   
   <categories>
     <category>Network</category>
