@@ -21,8 +21,27 @@ if __name__ == '__main__':
     import gi
 
     from gi.repository import Gio
-    resource = Gio.Resource.load(os.path.join(pkgdatadir, 'gnome-wardrive.gresource'))
-    resource._register()
+    
+    # Try multiple possible locations for the gresource file
+    possible_paths = [
+        os.path.join(pkgdatadir, 'gnome-wardrive.gresource'),
+        '/app/share/gnome-wardrive/gnome-wardrive.gresource',  # Flatpak path
+        'gnome-wardrive.gresource'  # Relative fallback
+    ]
+    
+    resource_loaded = False
+    for gresource_path in possible_paths:
+        if os.path.exists(gresource_path):
+            try:
+                resource = Gio.Resource.load(gresource_path)
+                resource._register()
+                resource_loaded = True
+                break
+            except Exception as e:
+                continue
+    
+    if not resource_loaded:
+        print("Warning: Could not load gresource file. UI may not display correctly.")
 
     from gnome_wardrive.main import main
     sys.exit(main())
