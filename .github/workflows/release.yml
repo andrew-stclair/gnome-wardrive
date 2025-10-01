@@ -16,7 +16,7 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y debhelper dh-python meson ninja-build libgtk-4-dev \
-          libadwaita-1-dev python3-dev libgirepository1.0-dev gir1.2-gtk-4.0 gir1.2-adw-1 \
+          libadwaita-1-dev python-gi-dev gir1.2-gtk-4.0 gir1.2-adw-1 \
           gir1.2-nm-1.0 gir1.2-geoclue-2.0 build-essential devscripts python3-requests python3-gpxpy
     
     - name: Build Debian package

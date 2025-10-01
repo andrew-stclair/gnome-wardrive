@@ -19,20 +19,18 @@ sudo apt-get install -y \
     debhelper \
     dh-python \
     python3-all \
-    python3-setuptools \
     meson \
     ninja-build \
     pkg-config \
     libgtk-4-dev \
     libadwaita-1-dev \
-    python3-dev \
-    libgirepository1.0-dev \
+    python-gi-dev \
     gir1.2-gtk-4.0 \
     gir1.2-adw-1 \
     gir1.2-nm-1.0 \
+    gir1.2-geoclue-2.0 \
     libnm-dev \
-    libglib2.0-dev \
-    glib-compile-resources \
+    libgio-2.0-dev-bin \
     desktop-file-utils \
     appstream-util \
     build-essential \

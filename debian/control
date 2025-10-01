@@ -5,20 +5,18 @@ Maintainer: Andrew St Clair <andrew@stclair.dev>
 Build-Depends: debhelper-compat (= 13),
                dh-python,
                python3-all,
-               python3-setuptools,
                meson (>= 0.60.0),
                ninja-build,
                pkg-config,
                libgtk-4-dev,
                libadwaita-1-dev,
-               python3-dev,
-               libgirepository1.0-dev,
+               python-gi-dev,
                gir1.2-gtk-4.0,
                gir1.2-adw-1,
                gir1.2-nm-1.0,
+               gir1.2-geoclue-2.0,
                libnm-dev,
-               libglib2.0-dev,
-               glib-compile-resources,
+               libgio-2.0-dev-bin,
                desktop-file-utils,
                appstream-util
 Standards-Version: 4.6.2
@@ -40,7 +38,7 @@ Depends: ${misc:Depends},
          gir1.2-nm-1.0,
          gir1.2-geoclue-2.0,
          network-manager
-Recommends: gpsd
+Recommends: geoclue-2.0
 Description: WiFi wardriving application for GNOME
  GNOME Wardrive is a WiFi wardriving application that allows users to scan
  for wireless networks and collect information about them. It provides a
