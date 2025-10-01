@@ -35,7 +35,8 @@ sudo apt-get install -y \
     appstream-util \
     build-essential \
     devscripts \
-    lintian
+    lintian \
+    gettext
 
 # Clean previous builds
 echo "🧹 Cleaning previous builds..."

@@ -17,7 +17,8 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y python3-gi python-gi-dev libgtk-4-dev libadwaita-1-dev gir1.2-gtk-4.0 \
-          gir1.2-adw-1 gir1.2-nm-1.0 gir1.2-geoclue-2.0 meson ninja-build python3-requests python3-gpxpy
+          gir1.2-adw-1 gir1.2-nm-1.0 gir1.2-geoclue-2.0 meson ninja-build python3-requests python3-gpxpy \
+          gettext desktop-file-utils appstream-util
     
     - name: Build and test
       run: |
@@ -35,9 +36,10 @@ jobs:
     - name: Install build dependencies
       run: |
         sudo apt update
-        sudo apt install -y debhelper dh-python meson ninja-build libgtk-4-dev \
-          libadwaita-1-dev python-gi-dev gir1.2-gtk-4.0 gir1.2-adw-1 \
-          gir1.2-nm-1.0 gir1.2-geoclue-2.0 build-essential devscripts python3-requests python3-gpxpy
+        sudo apt install -y debhelper dh-python python3-all meson ninja-build pkg-config \
+          libgtk-4-dev libadwaita-1-dev python-gi-dev gir1.2-gtk-4.0 gir1.2-adw-1 \
+          gir1.2-nm-1.0 gir1.2-geoclue-2.0 libnm-dev libgio-2.0-dev-bin desktop-file-utils \
+          appstream-util build-essential devscripts python3-requests python3-gpxpy gettext
     
     - name: Build Debian package
       run: |
