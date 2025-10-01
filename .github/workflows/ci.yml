@@ -23,6 +23,8 @@ jobs:
           gir1.2-adw-1 \
           gir1.2-nm-1.0 \
           gir1.2-geoclue-2.0 \
+          libgtk-4-dev \
+          libadwaita-1-dev \
           meson \
           ninja-build \
           appstream-util \
@@ -67,7 +69,7 @@ jobs:
         echo "Commit: ${{ github.sha }}" >> build-info.txt
         echo "Build Number: ${{ github.run_number }}" >> build-info.txt
         echo "Build Date: $(date -u)" >> build-info.txt
-        echo "GNOME Platform: 48" >> build-info.txt
+        echo "GNOME Platform: 46" >> build-info.txt
         echo "" >> build-info.txt
         echo "Installation Instructions:" >> build-info.txt
         echo "1. Download the .flatpak file" >> build-info.txt
@@ -91,7 +93,7 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "✅ **Build Status**: Success" >> $GITHUB_STEP_SUMMARY
         echo "📋 **Artifact Name**: gnome-wardrive-flatpak-${{ github.run_number }}-${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
-        echo "🏷️ **GNOME Platform**: 48" >> $GITHUB_STEP_SUMMARY
+        echo "🏷️ **GNOME Platform**: 46" >> $GITHUB_STEP_SUMMARY
         echo "📅 **Build Date**: $(date -u)" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### 🚀 Testing Instructions" >> $GITHUB_STEP_SUMMARY

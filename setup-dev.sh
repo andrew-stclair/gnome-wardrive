@@ -42,7 +42,7 @@ if ! flatpak remote-list | grep -q flathub; then
 fi
 
 echo "Installing GNOME Platform runtime..."
-flatpak install -y flathub org.gnome.Platform//48 org.gnome.Sdk//48
+flatpak install -y flathub org.gnome.Platform//46 org.gnome.Sdk//46
 
 # Test the setup
 echo "Testing setup..."
