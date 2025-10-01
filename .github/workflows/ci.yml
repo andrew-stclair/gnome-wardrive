@@ -62,6 +62,9 @@ jobs:
     - name: Validate manifest for architecture
       run: |
         echo "🔍 Validating Flatpak manifest for ${{ matrix.arch }} architecture..."
+        echo "Current architecture: $(uname -m)"
+        echo "Target architecture: ${{ matrix.arch }}"
+        
         # Check that the manifest doesn't contain architecture-specific dependencies
         if grep -q "only-arches\|skip-arches" com.andrewstclair.Wardrive.yml; then
           echo "⚠️  Architecture-specific configurations found"
@@ -76,6 +79,13 @@ jobs:
           echo "❌ Manifest YAML syntax error"
           exit 1
         fi
+        
+        # Check if cross-compilation tools are available for aarch64
+        if [ "${{ matrix.arch }}" = "aarch64" ]; then
+          echo "🔧 Checking cross-compilation environment..."
+          which meson || echo "❌ meson not found"
+          flatpak --version
+        fi
     
     - name: Build Flatpak
       uses: flatpak/flatpak-github-actions/flatpak-builder@v6
@@ -84,6 +94,7 @@ jobs:
         manifest-path: com.andrewstclair.Wardrive.yml
         cache-key: flatpak-builder-${{ matrix.arch }}-${{ github.sha }}
         arch: ${{ matrix.arch }}
+      timeout-minutes: 30
     
     - name: Create build info
       run: |
