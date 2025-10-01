@@ -59,6 +59,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
+    - name: Install pyyaml for manifest validation
+      run: pip3 install pyyaml
+
     - name: Validate manifest for architecture
       run: |
         echo "🔍 Validating Flatpak manifest for ${{ matrix.arch }} architecture..."
