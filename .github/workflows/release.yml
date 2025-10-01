@@ -16,12 +16,33 @@ jobs:
             runner: ubuntu-24.04-arm
       fail-fast: false
     runs-on: ${{ matrix.runner }}
-    container:
-      image: bilelmoussaoui/flatpak-github-actions:freedesktop-22.08
-      options: --privileged
     
     steps:
     - uses: actions/checkout@v4
+    
+    - name: Install Flatpak dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y \
+          flatpak \
+          flatpak-builder \
+          build-essential \
+          git \
+          ccache \
+          appstream-util \
+          desktop-file-utils \
+          elfutils \
+          python3-aiohttp \
+          python3-tenacity \
+          gettext \
+          shared-mime-info
+        
+        # Add Flathub remote
+        sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+        
+        # Install required SDKs and runtimes
+        sudo flatpak install -y flathub org.freedesktop.Platform//22.08 org.freedesktop.Sdk//22.08
+        sudo flatpak install -y flathub org.gnome.Platform//47 org.gnome.Sdk//47
     
     - name: Build Flatpak
       uses: flatpak/flatpak-github-actions/flatpak-builder@v6

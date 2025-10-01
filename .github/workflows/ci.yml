@@ -57,18 +57,40 @@ jobs:
             runner: ubuntu-24.04-arm
       fail-fast: false
     runs-on: ${{ matrix.runner }}
-    container:
-      image: bilelmoussaoui/flatpak-github-actions:freedesktop-22.08
-      options: --privileged
     
     steps:
     - uses: actions/checkout@v4
+    
+    - name: Install Flatpak dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y \
+          flatpak \
+          flatpak-builder \
+          build-essential \
+          git \
+          ccache \
+          appstream-util \
+          desktop-file-utils \
+          elfutils \
+          python3-aiohttp \
+          python3-tenacity \
+          gettext \
+          shared-mime-info
+        
+        # Add Flathub remote
+        sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+        
+        # Install required SDKs and runtimes
+        sudo flatpak install -y flathub org.freedesktop.Platform//22.08 org.freedesktop.Sdk//22.08
+        sudo flatpak install -y flathub org.gnome.Platform//47 org.gnome.Sdk//47
     
     - name: Validate manifest for architecture
       run: |
         echo "🔍 Validating Flatpak manifest for ${{ matrix.arch }} architecture..."
         echo "Current architecture: $(uname -m)"
         echo "Target architecture: ${{ matrix.arch }}"
+        echo "Build method: Native runner (no container)"
         
         # Check that the manifest doesn't contain architecture-specific dependencies
         if grep -q "only-arches\|skip-arches" com.andrewstclair.Wardrive.yml; then
@@ -85,12 +107,11 @@ jobs:
           exit 1
         fi
         
-        # Check if cross-compilation tools are available for aarch64
-        if [ "${{ matrix.arch }}" = "aarch64" ]; then
-          echo "🔧 Checking cross-compilation environment..."
-          which meson || echo "❌ meson not found"
-          flatpak --version
-        fi
+        # Show environment info
+        flatpak --version
+        flatpak-builder --version
+        echo "Available runtimes:"
+        flatpak list --runtime
     
     - name: Build Flatpak
       uses: flatpak/flatpak-github-actions/flatpak-builder@v6
@@ -111,6 +132,7 @@ jobs:
         echo "Build Number: ${{ github.run_number }}" >> build-info-${{ matrix.arch }}.txt
         echo "Build Date: $(date -u)" >> build-info-${{ matrix.arch }}.txt
         echo "Architecture: ${{ matrix.arch }}" >> build-info-${{ matrix.arch }}.txt
+        echo "Build Method: Native ${{ matrix.arch }} Runner" >> build-info-${{ matrix.arch }}.txt
         echo "GNOME Platform: 47" >> build-info-${{ matrix.arch }}.txt
         echo "" >> build-info-${{ matrix.arch }}.txt
         echo "Installation Instructions:" >> build-info-${{ matrix.arch }}.txt
@@ -135,6 +157,7 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "✅ **Build Status**: Success" >> $GITHUB_STEP_SUMMARY
         echo "🏗️ **Architecture**: ${{ matrix.arch }}" >> $GITHUB_STEP_SUMMARY
+        echo "🖥️ **Build Method**: Native ${{ matrix.arch }} Runner" >> $GITHUB_STEP_SUMMARY
         echo "📋 **Artifact Name**: gnome-wardrive-flatpak-${{ matrix.arch }}-${{ github.run_number }}-${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
         echo "🏷️ **GNOME Platform**: 47" >> $GITHUB_STEP_SUMMARY
         echo "📅 **Build Date**: $(date -u)" >> $GITHUB_STEP_SUMMARY
@@ -162,8 +185,8 @@ jobs:
         echo "## 🏗️ Multi-Architecture Flatpak Build Results" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### 📦 Available Architectures" >> $GITHUB_STEP_SUMMARY
-        echo "- **x86_64**: Intel/AMD 64-bit systems (desktops, laptops)" >> $GITHUB_STEP_SUMMARY
-        echo "- **aarch64**: ARM 64-bit systems (mobile devices, ARM SBCs)" >> $GITHUB_STEP_SUMMARY
+        echo "- **x86_64**: Intel/AMD 64-bit systems (desktops, laptops) - *Built on native x86_64 runner*" >> $GITHUB_STEP_SUMMARY
+        echo "- **aarch64**: ARM 64-bit systems (mobile devices, ARM SBCs) - *Built on native ARM64 runner*" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### 📥 Download Instructions" >> $GITHUB_STEP_SUMMARY
         echo "1. Go to the **Actions** tab of this repository" >> $GITHUB_STEP_SUMMARY

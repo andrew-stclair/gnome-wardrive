@@ -1,13 +1,21 @@
 # Mobile Linux Installation Guide
 
-## 🏗️ Native ARM64 Builds
+## 🏗️ Native Multi-Architecture Builds
 
-GNOME Wardrive uses **native ARM64 GitHub runners** provided by Arm Limited to ensure optimal performance on mobile devices:
+GNOME Wardrive uses **native runners** for all architectures to ensure optimal performance and consistency:
 
-- **Build Infrastructure**: `ubuntu-24.04-arm` runners for aarch64 Flatpak builds
-- **No Cross-compilation**: Eliminates compatibility issues and performance overhead
-- **Mobile-First**: Optimized specifically for PinePhone, Librem 5, and other ARM64 mobile devices
-- **Continuous Integration**: Every commit builds and tests on actual ARM64 hardware
+### Build Infrastructure
+- **x86_64 (Desktop)**: Native x86_64 runner (`ubuntu-latest`) with direct Flatpak installation
+- **aarch64 (Mobile)**: Native ARM64 runner (`ubuntu-24.04-arm`) with direct Flatpak installation
+- **No Cross-compilation**: Each build runs on native hardware for its target architecture
+- **No Containers**: Direct Ubuntu environment eliminates container complexity and compatibility issues
+
+### Why Native Approach?
+- **Consistency**: Same build process and environment for all architectures
+- **Reliability**: No dependency on third-party container image availability
+- **Performance**: Native compilation provides optimal performance for each platform
+- **Simplicity**: Easier to debug, maintain, and understand
+- **Mobile-First**: Perfectly optimized for PinePhone, Librem 5, and other ARM64 mobile devices
 
 ## 📱 Supported Mobile Devices
 
