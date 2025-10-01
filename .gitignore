@@ -27,10 +27,17 @@ pip-delete-this-directory.txt
 .DS_Store
 Thumbs.db
 
-# Flatpak
-.flatpak-builder/
-*.flatpak
-*.flatpakref
+# Debian packaging
+debian/files
+debian/.debhelper/
+debian/gnome-wardrive/
+debian/*.log
+debian/*.substvars
+debian/tmp/
+*.deb
+*.changes
+*.buildinfo
+*.dsc
 
 # Temporary files
 *.tmp

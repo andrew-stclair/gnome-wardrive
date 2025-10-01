@@ -13,10 +13,10 @@ This project follows the [GNOME Code of Conduct](https://conduct.gnome.org/). Pl
 1. Install required dependencies:
    ```bash
    # Ubuntu/Debian
-   sudo apt install python3-gi python3-gi-cairo gir1.2-gtk-4.0 gir1.2-adw-1 gir1.2-nm-1.0 gir1.2-geoclue-2.0 meson ninja-build
+   sudo apt install python3-gi python3-gi-cairo gir1.2-gtk-4.0 gir1.2-adw-1 gir1.2-nm-1.0 gir1.2-geoclue-2.0 meson ninja-build build-essential debhelper dh-python
 
    # Fedora
-   sudo dnf install python3-gobject gtk4-devel libadwaita-devel NetworkManager-glib-devel geoclue2-devel meson ninja-build
+   sudo dnf install python3-gobject gtk4-devel libadwaita-devel NetworkManager-glib-devel geoclue2-devel meson ninja-build rpm-build
    ```
 
 2. Clone the repository:
@@ -25,7 +25,7 @@ This project follows the [GNOME Code of Conduct](https://conduct.gnome.org/). Pl
    cd gnome-wardrive
    ```
 
-3. Install Python dependencies:
+3. Install Python dependencies (if developing):
    ```bash
    pip install -r requirements.txt
    ```
@@ -129,18 +129,22 @@ meson test -C builddir
 - Test error conditions
 - Mock external dependencies (NetworkManager, GeoClue)
 
-## Flatpak Development
+## Debian Package Development
 
-### Building Flatpak
+### Building Debian Package
 
 ```bash
-flatpak-builder build-dir com.andrewstclair.Wardrive.yml --force-clean
+./build-deb.sh
 ```
 
-### Testing Flatpak
+### Testing Debian Package
 
 ```bash
-flatpak-builder --run build-dir com.andrewstclair.Wardrive.yml gnome-wardrive
+# Install the built package
+sudo dpkg -i gnome-wardrive_*.deb
+
+# Or run directly from build directory
+./builddir/src/gnome-wardrive
 ```
 
 ## Security Considerations

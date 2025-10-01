@@ -1,0 +1,54 @@
+Source: gnome-wardrive
+Section: net
+Priority: optional
+Maintainer: Andrew St Clair <andrew@stclair.dev>
+Build-Depends: debhelper-compat (= 13),
+               dh-python,
+               python3-all,
+               python3-setuptools,
+               meson (>= 0.60.0),
+               ninja-build,
+               pkg-config,
+               libgtk-4-dev,
+               libadwaita-1-dev,
+               python3-gi-dev,
+               gir1.2-gtk-4.0,
+               gir1.2-adw-1,
+               gir1.2-nm-1.0,
+               libnm-dev,
+               libglib2.0-dev,
+               glib-compile-resources,
+               desktop-file-utils,
+               appstream-util
+Standards-Version: 4.6.2
+Homepage: https://github.com/andrew-stclair/gnome-wardrive
+Vcs-Browser: https://github.com/andrew-stclair/gnome-wardrive
+Vcs-Git: https://github.com/andrew-stclair/gnome-wardrive.git
+Rules-Requires-Root: no
+
+Package: gnome-wardrive
+Architecture: all
+Depends: ${misc:Depends},
+         ${python3:Depends},
+         python3,
+         python3-gi,
+         python3-requests,
+         python3-gpxpy,
+         gir1.2-gtk-4.0,
+         gir1.2-adw-1,
+         gir1.2-nm-1.0,
+         gir1.2-geoclue-2.0,
+         network-manager
+Recommends: gpsd
+Description: WiFi wardriving application for GNOME
+ GNOME Wardrive is a WiFi wardriving application that allows users to scan
+ for wireless networks and collect information about them. It provides a
+ modern GTK4/Libadwaita interface for monitoring WiFi networks, collecting
+ GPS coordinates, and exporting data for analysis.
+ .
+ Features include:
+  - Real-time WiFi network scanning
+  - GPS coordinate collection via GeoClue
+  - Export data to various formats
+  - Modern GNOME interface
+  - Mobile-friendly responsive design

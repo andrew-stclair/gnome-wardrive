@@ -1,21 +1,21 @@
 # Mobile Linux Installation Guide
 
-## 🏗️ Native Multi-Architecture Builds
+## 🏗️ Native ARM64 Support
 
-GNOME Wardrive uses **native runners** for all architectures to ensure optimal performance and consistency:
+GNOME Wardrive provides native Debian packages built specifically for ARM64 mobile devices:
 
-### Build Infrastructure
-- **x86_64 (Desktop)**: Native x86_64 runner (`ubuntu-latest`) with direct Flatpak installation
-- **aarch64 (Mobile)**: Native ARM64 runner (`ubuntu-24.04-arm`) with direct Flatpak installation
-- **No Cross-compilation**: Each build runs on native hardware for its target architecture
-- **No Containers**: Direct Ubuntu environment eliminates container complexity and compatibility issues
+### Build Infrastructure  
+- **amd64 (Desktop)**: Intel/AMD 64-bit systems
+- **arm64 (Mobile)**: Native ARM64 builds for mobile devices
+- **No Cross-compilation**: Each package is built on native hardware
+- **System Integration**: Native packages provide full desktop integration
 
-### Why Native Approach?
-- **Consistency**: Same build process and environment for all architectures
-- **Reliability**: No dependency on third-party container image availability
-- **Performance**: Native compilation provides optimal performance for each platform
-- **Simplicity**: Easier to debug, maintain, and understand
-- **Mobile-First**: Perfectly optimized for PinePhone, Librem 5, and other ARM64 mobile devices
+### Why Native Debian Packages?
+- **Performance**: No sandbox overhead, direct system access
+- **Integration**: Proper desktop files, icons, and system services
+- **Reliability**: Uses system NetworkManager directly (no D-Bus proxy issues)
+- **Mobile-Optimized**: Designed specifically for PinePhone, Librem 5, and ARM devices
+- **Package Management**: Standard apt/dpkg integration
 
 ## 📱 Supported Mobile Devices
 
@@ -40,35 +40,21 @@ GNOME Wardrive is optimized for Linux mobile devices with native ARM64 support:
 
 ### Method 1: Direct Installation (Recommended)
 
-1. **Download the ARM64 bundle** to your mobile device:
+1. **Download the ARM64 package** to your mobile device:
    ```bash
-   # On your mobile device
-   wget https://github.com/andrew-stclair/gnome-wardrive/releases/latest/download/com.andrewstclair.Wardrive-aarch64.flatpak
+   # On your mobile device  
+   wget https://github.com/andrew-stclair/gnome-wardrive/releases/latest/download/gnome-wardrive_*_arm64.deb
    ```
 
-2. **Install Flatpak** (if not already installed):
-   ```bash
+2. **Install the package**:
    # Debian/Ubuntu based (Mobian, PureOS)
-   sudo apt install flatpak
-   
-   # Alpine based (postmarketOS)
-   sudo apk add flatpak
-   
-   # Arch based (Manjaro ARM)
-   sudo pacman -S flatpak
-   
-   # Add Flathub repository
-   flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+   sudo dpkg -i gnome-wardrive_*_arm64.deb
+   sudo apt-get install -f  # Fix any missing dependencies
    ```
 
-3. **Install GNOME Wardrive**:
+3. **Launch the application**:
    ```bash
-   flatpak install com.andrewstclair.Wardrive-aarch64.flatpak
-   ```
-
-4. **Launch the application**:
-   ```bash
-   flatpak run com.andrewstclair.Wardrive
+   gnome-wardrive
    ```
 
 ### Method 2: Transfer from Desktop
@@ -76,17 +62,37 @@ GNOME Wardrive is optimized for Linux mobile devices with native ARM64 support:
 1. **Download on desktop** and transfer via SSH/USB:
    ```bash
    # On desktop
-   wget https://github.com/andrew-stclair/gnome-wardrive/releases/latest/download/com.andrewstclair.Wardrive-aarch64.flatpak
+   wget https://github.com/andrew-stclair/gnome-wardrive/releases/latest/download/gnome-wardrive_*_arm64.deb
    
    # Transfer to mobile device (replace with your device IP)
-   scp com.andrewstclair.Wardrive-aarch64.flatpak user@mobile-device-ip:~/
+   scp gnome-wardrive_*_arm64.deb user@mobile-device-ip:~/
    ```
 
 2. **Install on mobile device**:
    ```bash
    # On mobile device
-   flatpak install ~/com.andrewstclair.Wardrive-aarch64.flatpak
+   sudo dpkg -i ~/gnome-wardrive_*_arm64.deb
+   sudo apt-get install -f  # Fix dependencies
    ```
+
+### Method 3: Build from Source
+
+For distributions that don't support .deb packages:
+```bash
+# Clone the repository
+git clone https://github.com/andrew-stclair/gnome-wardrive.git
+cd gnome-wardrive
+
+# Install dependencies (adapt for your package manager)
+sudo apt install python3-gi python3-requests python3-gpxpy \
+                 gir1.2-gtk-4.0 gir1.2-adw-1 gir1.2-nm-1.0 \
+                 gir1.2-geoclue-2.0 meson ninja-build
+
+# Build and install
+meson setup builddir
+meson compile -C builddir
+sudo meson install -C builddir
+```
 
 ## 🔧 Mobile-Specific Configuration
 
@@ -162,10 +168,13 @@ nmcli device status
 View application logs for mobile debugging:
 ```bash
 # Run with debug output
-flatpak run --command=sh com.andrewstclair.Wardrive -c "gnome-wardrive --verbose"
+gnome-wardrive --verbose
 
-# Check system logs
-journalctl --user -u app.flatpak.com.andrewstclair.Wardrive
+# Check system logs for NetworkManager issues
+journalctl -u NetworkManager
+
+# Check application logs
+journalctl --user | grep gnome-wardrive
 ```
 
 ## 🌐 Mobile Linux Community

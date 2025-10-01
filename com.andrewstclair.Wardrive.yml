@@ -37,6 +37,70 @@ cleanup:
   - '*.a'
 
 modules:
+  - name: network-manager
+    buildsystem: meson
+    config-opts:
+      - -Dintrospection=true
+      - -Dvapi=false  
+      - -Ddocs=false
+      - -Dtests=no
+      - -Dqt=false
+      - -Dselinux=false
+      - -Dpolkit=false
+      - -Dlibaudit=no
+      - -Dmodem_manager=false
+      - -Dppp=false
+      - -Dsystemdsystemunitdir=no
+      - -Dudev_dir=/app/lib/udev
+      - -Ddbus_conf_dir=/app/etc/dbus-1/system.d
+      - -Dkernel_firmware_dir=/app/lib/firmware
+      - -Diptables=/usr/sbin/iptables
+      - -Ddnsmasq=/usr/bin/dnsmasq
+      - -Dsession_tracking=no
+      - -Dresolvconf=no
+      - -Dnetconfig=no
+      - -Dconfig_plugins_default=keyfile
+      - -Ddhclient=no
+      - -Ddhcpcd=no
+      - -Ddhcpcanon=no
+      - -Dconfig_dhcp_default=internal
+      - -Dcrypto=gnutls
+      - -Dovs=false
+      - -Dnmtui=false
+    sources:
+      - type: archive
+        url: https://download.gnome.org/sources/NetworkManager/1.44/NetworkManager-1.44.2.tar.xz
+        sha256: 4b58bf3ac57e2cefb5652efd0945eb0b4bc36a63d92a61ab471d8bb2c9a420e1
+        x-checker-data:
+          type: gnome
+          name: NetworkManager
+    cleanup:
+      - /bin
+      - /sbin
+      - /libexec
+      - /etc
+      - /var
+      - /lib/systemd
+      - /lib/NetworkManager
+      - /share/bash-completion
+      - /share/dbus-1/system-services
+      - /share/dbus-1/system.d
+      - /share/man
+      - /share/polkit-1
+    modules:
+      - name: libndp
+        buildsystem: autotools
+        sources:
+          - type: archive
+            url: https://github.com/jpirko/libndp/archive/v1.8.tar.gz
+            sha256: c3ea76e253def89869651686a827da75b56896fe94fabd87d8c14b1d4588fd05
+            x-checker-data:
+              type: anitya
+              project-id: 15112
+              url-template: https://github.com/jpirko/libndp/archive/v$version.tar.gz
+
+
+
   - name: gnome-wardrive
     buildsystem: meson
     config-opts:

@@ -1,0 +1,11 @@
+gnome-wardrive (1.0.0-1) unstable; urgency=medium
+
+  * Initial release
+  * WiFi wardriving application for GNOME
+  * Real-time network scanning with NetworkManager integration
+  * GPS coordinate collection via GeoClue
+  * Export functionality for collected data
+  * Modern GTK4/Libadwaita interface
+  * Mobile-friendly responsive design
+
+ -- Andrew St Clair <andrew@stclair.dev>  Tue, 01 Oct 2024 12:00:00 +0000

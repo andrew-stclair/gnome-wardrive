@@ -7,20 +7,20 @@ A modern GNOME application for WiFi wardriving built with Python, GTK4, and Liba
 
 - **📱 Mobile Linux First** - Native ARM64 builds for PinePhone, Librem 5, postmarketOS devices
 - **🔄 Adaptive Interface** - Touch-optimized UI that works from 320px phone screens to desktop
-- **📡 Portable WiFi Scanning** - Uses NetworkManager D-Bus (works in Flatpak sandboxes, no root needed)
+- **📡 System WiFi Scanning** - Uses NetworkManager D-Bus API (no root required)
 - **🌍 GPS Location Tracking** - Native GeoClue integration for accurate positioning
 - **💾 Multiple Export Formats** - CSV, KML, GPX for analysis and mapping
 - **👆 Touch-Friendly Design** - 48px minimum touch targets, bottom action bars
 - **🎨 Native GNOME Integration** - Libadwaita styling, adaptive layouts
-- **📦 Cross-Platform Packaging** - Flatpak bundles for x86_64 and aarch64
+- **📦 Native Packaging** - Debian packages for x86_64 and aarch64
 
 ## WiFi Scanning
 
-This application uses a **passive WiFi monitoring** approach that works reliably across different systems and inside Flatpak sandboxes:
+This application uses a **passive WiFi monitoring** approach that works reliably across different Linux systems:
 
 - **Passive Monitoring**: Detects networks that are actively beaconing or being scanned by other devices
 - **No System Configuration**: Works out-of-the-box without requiring special permissions or system modifications  
-- **Flatpak Compatible**: Full functionality when installed as a sandboxed Flatpak application
+- **Native Integration**: Direct access to NetworkManager for optimal performance
 - **Cross-Platform**: Same behavior across different Linux distributions and device types
 
 The app continuously monitors NetworkManager's cache of visible access points, which is updated whenever:
@@ -36,27 +36,54 @@ The app continuously monitors NetworkManager's cache of visible access points, w
 - NetworkManager
 - GeoClue2
 - PyGObject
-- GNOME Platform 47 (for Flatpak builds)
 
-## Building
+## Building & Installation
 
-## Building
+### Debian Package (Recommended)
 
-### Quick Start (Development Testing)
+For Debian/Ubuntu systems, build and install as a native package:
 
 ```bash
-# 1. Install dependencies
-sudo apt install python3-gi python3-gi-cairo gir1.2-gtk-4.0 gir1.2-adw-1 gir1.2-nm-1.0 gir1.2-geoclue-2.0 python3-gpxpy
+# 1. Install dependencies and build the package
+./build-deb.sh
+
+# 2. Install the package
+sudo dpkg -i ../gnome-wardrive_*.deb
+sudo apt-get install -f  # Fix any missing dependencies
+```
+
+#### Manual Debian Package Build
+
+If you prefer to build manually:
+
+```bash
+# Install build dependencies
+sudo apt-get install debhelper dh-python python3-all python3-setuptools \
+                     meson ninja-build pkg-config libgtk-4-dev \
+                     libadwaita-1-dev python3-gi-dev gir1.2-gtk-4.0 \
+                     gir1.2-adw-1 gir1.2-nm-1.0 libnm-dev libglib2.0-dev \
+                     glib-compile-resources desktop-file-utils appstream-util \
+                     build-essential devscripts lintian
+
+# Build the package
+debuild -us -uc -b
+```
+
+### Development & Testing
+
+```bash
+# 1. Install runtime dependencies
+./install-deps.sh
 
 # 2. Test and run the application
 ./quick-test.sh
 ```
 
-### Full Build with Meson
+### Manual Build with Meson
 
 ```bash
 # Install build dependencies
-sudo apt install meson ninja-build libadwaita-1-dev python-gi-dev
+sudo apt install meson ninja-build libadwaita-1-dev python3-gi-dev
 
 # Build
 meson setup builddir
@@ -66,32 +93,20 @@ meson compile -C builddir
 ./builddir/src/gnome-wardrive
 ```
 
-### Flatpak Build
-
-```bash
-flatpak-builder build-dir com.andrewstclair.Wardrive.yml --force-clean
-flatpak-builder --run build-dir com.andrewstclair.Wardrive.yml gnome-wardrive
-```
-
 ## Installation
 
-### Multi-Architecture Flatpak Bundles
+Download pre-built packages from the [Releases](https://github.com/andrew-stclair/gnome-wardrive/releases) page:
 
-Pre-built Flatpak bundles are available for multiple architectures from GitHub Actions or Releases:
+### Debian/Ubuntu Systems
+1. Download the appropriate `.deb` file for your architecture (`amd64` for Intel/AMD, `arm64` for ARM)
+2. Install: `sudo dpkg -i gnome-wardrive_*_{arch}.deb`
+3. Fix dependencies: `sudo apt-get install -f`
+4. Run: `gnome-wardrive`
 
-**Supported Architectures:**
-- **x86_64**: Intel/AMD 64-bit systems (most desktops and laptops)
-- **aarch64**: ARM 64-bit systems (mobile devices, Raspberry Pi, ARM SBCs)
-
-**Installation Steps:**
-1. **Check your architecture**: `uname -m`
-2. **Download** the appropriate bundle from [Releases](https://github.com/andrew-stclair/gnome-wardrive/releases) or [Actions](https://github.com/andrew-stclair/gnome-wardrive/actions)
-3. **Install**: `flatpak install com.andrewstclair.Wardrive-{arch}.flatpak` 
-4. **Run**: `flatpak run com.andrewstclair.Wardrive`
-
-**Architecture Selection:**
-- If `uname -m` shows `x86_64` → Download `com.andrewstclair.Wardrive-x86_64.flatpak`
-- If `uname -m` shows `aarch64` or `arm64` → Download `com.andrewstclair.Wardrive-aarch64.flatpak`
+### Architecture Detection
+Run `dpkg --print-architecture` to check your system:
+- `amd64` → Download the amd64 package
+- `arm64` → Download the arm64 package
 
 ### From Source
 
@@ -99,11 +114,7 @@ Build from source for development or custom configurations (see Building section
 
 ### 📱 Mobile Linux Installation
 
-For detailed mobile device installation, optimization, and troubleshooting, see [MOBILE_LINUX.md](MOBILE_LINUX.md).
-
-### Multi-Architecture Details
-
-For comprehensive information about architecture support, compatibility, and troubleshooting, see [MULTI_ARCH.md](MULTI_ARCH.md).
+For detailed mobile device installation and optimization, see [MOBILE_LINUX.md](MOBILE_LINUX.md).
 
 ## Privacy and Legal Considerations
 
