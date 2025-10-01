@@ -26,6 +26,7 @@ jobs:
           libgtk-4-dev \
           libadwaita-1-dev \
           python-gi-dev \
+          gettext \
           meson \
           ninja-build \
           appstream-util \
