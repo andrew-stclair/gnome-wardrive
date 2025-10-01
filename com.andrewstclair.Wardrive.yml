@@ -1,0 +1,44 @@
+app-id: com.andrewstclair.Wardrive
+runtime: org.gnome.Platform
+runtime-version: '48'
+sdk: org.gnome.Sdk
+command: gnome-wardrive
+
+finish-args:
+  # X11 + XShm access
+  - --share=ipc
+  - --socket=fallback-x11
+  # Wayland access
+  - --socket=wayland
+  # Network scanning requires network access
+  - --share=network
+  # System D-Bus for NetworkManager and GeoClue
+  # NetworkManager access for WiFi monitoring (passive scanning)
+  - --system-talk-name=org.freedesktop.NetworkManager
+  # GeoClue access for GPS location services
+  - --system-talk-name=org.freedesktop.GeoClue2
+  # Session D-Bus for desktop integration
+  - --talk-name=org.freedesktop.secrets
+  # Access to home directory for saving exports
+  - --filesystem=home
+  # GPU acceleration
+  - --device=dri
+
+cleanup:
+  - /include
+  - /lib/debug
+  - /lib/pkgconfig
+  - /man
+  - /share/doc
+  - /share/gtk-doc
+  - /share/man
+  - /share/pkgconfig
+  - '*.la'
+  - '*.a'
+
+modules:
+  - name: gnome-wardrive
+    buildsystem: meson
+    sources:
+      - type: dir
+        path: .

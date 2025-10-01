@@ -1,0 +1,63 @@
+/* Custom CSS for GNOME Wardrive */
+
+/* Main window styling */
+.wardrive-window {
+  background-color: @window_bg_color;
+}
+
+/* Network list styling */
+.network-row {
+  padding: 8px;
+}
+
+.network-ssid {
+  font-weight: bold;
+}
+
+.network-details {
+  font-size: 0.9em;
+  opacity: 0.7;
+}
+
+/* Security indicators */
+.security-open {
+  color: @error_color;
+}
+
+.security-wep {
+  color: @warning_color;
+}
+
+.security-wpa {
+  color: @success_color;
+}
+
+/* Signal strength indicators */
+.signal-excellent {
+  color: @success_color;
+}
+
+.signal-good {
+  color: @success_color;
+}
+
+.signal-fair {
+  color: @warning_color;
+}
+
+.signal-poor {
+  color: @error_color;
+}
+
+/* Status indicators */
+.status-scanning {
+  color: @accent_color;
+}
+
+.status-ready {
+  color: @success_color;
+}
+
+.status-error {
+  color: @error_color;
+}

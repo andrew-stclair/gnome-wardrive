@@ -1,0 +1,48 @@
+# Build artifacts
+/build*/
+/builddir/
+/_build/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Flatpak
+.flatpak-builder/
+*.flatpak
+*.flatpakref
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Generated files
+*.gresource
+*.desktop
+*.metainfo.xml
+gnome-wardrive
+
+# Distribution
+dist/
+*.egg-info/
