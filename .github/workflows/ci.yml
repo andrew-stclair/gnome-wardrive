@@ -52,56 +52,76 @@ jobs:
     container:
       image: bilelmoussaoui/flatpak-github-actions:gnome-46
       options: --privileged
+    strategy:
+      matrix:
+        arch: [x86_64, aarch64]
     
     steps:
     - uses: actions/checkout@v4
     
-    - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+    - name: Validate manifest for architecture
+      run: |
+        echo "🔍 Validating Flatpak manifest for ${{ matrix.arch }} architecture..."
+        # Check that the manifest doesn't contain architecture-specific dependencies
+        if grep -q "only-arches\|skip-arches" com.andrewstclair.Wardrive.yml; then
+          echo "⚠️  Architecture-specific configurations found"
+        else
+          echo "✅ Manifest is architecture-independent"
+        fi
+        
+        # Validate manifest syntax
+        python3 -c "import yaml; yaml.safe_load(open('com.andrewstclair.Wardrive.yml', 'r')); print('✅ Manifest YAML syntax is valid')"
+    
+    - name: Build Flatpak
+      uses: flatpak/flatpak-github-actions/flatpak-builder@v6
       with:
-        bundle: com.andrewstclair.Wardrive.flatpak
+        bundle: com.andrewstclair.Wardrive-${{ matrix.arch }}.flatpak
         manifest-path: com.andrewstclair.Wardrive.yml
-        cache-key: flatpak-builder-${{ github.sha }}
+        cache-key: flatpak-builder-${{ matrix.arch }}-${{ github.sha }}
+        arch: ${{ matrix.arch }}
     
     - name: Create build info
       run: |
-        echo "Build Information" > build-info.txt
-        echo "=================" >> build-info.txt
-        echo "Repository: ${{ github.repository }}" >> build-info.txt
-        echo "Branch: ${{ github.ref_name }}" >> build-info.txt
-        echo "Commit: ${{ github.sha }}" >> build-info.txt
-        echo "Build Number: ${{ github.run_number }}" >> build-info.txt
-        echo "Build Date: $(date -u)" >> build-info.txt
-        echo "GNOME Platform: 46" >> build-info.txt
-        echo "" >> build-info.txt
-        echo "Installation Instructions:" >> build-info.txt
-        echo "1. Download the .flatpak file" >> build-info.txt
-        echo "2. Install with: flatpak install com.andrewstclair.Wardrive.flatpak" >> build-info.txt
-        echo "3. Run with: flatpak run com.andrewstclair.Wardrive" >> build-info.txt
+        echo "Build Information - ${{ matrix.arch }}" > build-info-${{ matrix.arch }}.txt
+        echo "=================================" >> build-info-${{ matrix.arch }}.txt
+        echo "Repository: ${{ github.repository }}" >> build-info-${{ matrix.arch }}.txt
+        echo "Branch: ${{ github.ref_name }}" >> build-info-${{ matrix.arch }}.txt
+        echo "Commit: ${{ github.sha }}" >> build-info-${{ matrix.arch }}.txt
+        echo "Build Number: ${{ github.run_number }}" >> build-info-${{ matrix.arch }}.txt
+        echo "Build Date: $(date -u)" >> build-info-${{ matrix.arch }}.txt
+        echo "Architecture: ${{ matrix.arch }}" >> build-info-${{ matrix.arch }}.txt
+        echo "GNOME Platform: 46" >> build-info-${{ matrix.arch }}.txt
+        echo "" >> build-info-${{ matrix.arch }}.txt
+        echo "Installation Instructions:" >> build-info-${{ matrix.arch }}.txt
+        echo "1. Download the .flatpak file" >> build-info-${{ matrix.arch }}.txt
+        echo "2. Install with: flatpak install com.andrewstclair.Wardrive-${{ matrix.arch }}.flatpak" >> build-info-${{ matrix.arch }}.txt
+        echo "3. Run with: flatpak run com.andrewstclair.Wardrive" >> build-info-${{ matrix.arch }}.txt
     
     - name: Upload Flatpak bundle
       uses: actions/upload-artifact@v4
       with:
-        name: gnome-wardrive-flatpak-${{ github.run_number }}-${{ github.sha }}
+        name: gnome-wardrive-flatpak-${{ matrix.arch }}-${{ github.run_number }}-${{ github.sha }}
         path: |
-          com.andrewstclair.Wardrive.flatpak
-          build-info.txt
+          com.andrewstclair.Wardrive-${{ matrix.arch }}.flatpak
+          build-info-${{ matrix.arch }}.txt
         retention-days: 30
         compression-level: 6
         if-no-files-found: error
     
     - name: Build Summary
       run: |
-        echo "## 📦 Flatpak Build Complete" >> $GITHUB_STEP_SUMMARY
+        echo "## 📦 Flatpak Build Complete (${{ matrix.arch }})" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "✅ **Build Status**: Success" >> $GITHUB_STEP_SUMMARY
-        echo "📋 **Artifact Name**: gnome-wardrive-flatpak-${{ github.run_number }}-${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+        echo "🏗️ **Architecture**: ${{ matrix.arch }}" >> $GITHUB_STEP_SUMMARY
+        echo "📋 **Artifact Name**: gnome-wardrive-flatpak-${{ matrix.arch }}-${{ github.run_number }}-${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
         echo "🏷️ **GNOME Platform**: 46" >> $GITHUB_STEP_SUMMARY
         echo "📅 **Build Date**: $(date -u)" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### 🚀 Testing Instructions" >> $GITHUB_STEP_SUMMARY
-        echo "1. Download the artifact from the Actions tab" >> $GITHUB_STEP_SUMMARY
+        echo "1. Download the ${{ matrix.arch }} artifact from the Actions tab" >> $GITHUB_STEP_SUMMARY
         echo "2. Extract the .flatpak file" >> $GITHUB_STEP_SUMMARY
-        echo "3. Install: \`flatpak install com.andrewstclair.Wardrive.flatpak\`" >> $GITHUB_STEP_SUMMARY
+        echo "3. Install: \`flatpak install com.andrewstclair.Wardrive-${{ matrix.arch }}.flatpak\`" >> $GITHUB_STEP_SUMMARY
         echo "4. Run: \`flatpak run com.andrewstclair.Wardrive\`" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### ✨ Features to Test" >> $GITHUB_STEP_SUMMARY
@@ -109,3 +129,42 @@ jobs:
         echo "- 📍 GPS location tracking via GeoClue" >> $GITHUB_STEP_SUMMARY
         echo "- 💾 Data export (CSV, KML, GPX formats)" >> $GITHUB_STEP_SUMMARY
         echo "- 🎨 Modern GTK4/Libadwaita interface" >> $GITHUB_STEP_SUMMARY
+  
+  build-summary:
+    needs: flatpak
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: Multi-Architecture Build Summary
+      run: |
+        echo "## 🏗️ Multi-Architecture Flatpak Build Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📦 Available Architectures" >> $GITHUB_STEP_SUMMARY
+        echo "- **x86_64**: Intel/AMD 64-bit systems (desktops, laptops)" >> $GITHUB_STEP_SUMMARY
+        echo "- **aarch64**: ARM 64-bit systems (mobile devices, ARM SBCs)" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📥 Download Instructions" >> $GITHUB_STEP_SUMMARY
+        echo "1. Go to the **Actions** tab of this repository" >> $GITHUB_STEP_SUMMARY
+        echo "2. Click on this workflow run" >> $GITHUB_STEP_SUMMARY
+        echo "3. Scroll down to **Artifacts** section" >> $GITHUB_STEP_SUMMARY
+        echo "4. Download the appropriate architecture:" >> $GITHUB_STEP_SUMMARY
+        echo "   - \`gnome-wardrive-flatpak-x86_64-...\` for Intel/AMD systems" >> $GITHUB_STEP_SUMMARY
+        echo "   - \`gnome-wardrive-flatpak-aarch64-...\` for ARM systems" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 🔍 Architecture Detection" >> $GITHUB_STEP_SUMMARY
+        echo "Run \`uname -m\` to check your system:" >> $GITHUB_STEP_SUMMARY
+        echo "- \`x86_64\` → Use x86_64 bundle" >> $GITHUB_STEP_SUMMARY
+        echo "- \`aarch64\` or \`arm64\` → Use aarch64 bundle" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 🚀 Installation" >> $GITHUB_STEP_SUMMARY
+        echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+        echo "# Extract the downloaded artifact" >> $GITHUB_STEP_SUMMARY
+        echo "unzip gnome-wardrive-flatpak-{arch}-*.zip" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "# Install the Flatpak bundle" >> $GITHUB_STEP_SUMMARY
+        echo "flatpak install com.andrewstclair.Wardrive-{arch}.flatpak" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "# Run the application" >> $GITHUB_STEP_SUMMARY
+        echo "flatpak run com.andrewstclair.Wardrive" >> $GITHUB_STEP_SUMMARY
+        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY

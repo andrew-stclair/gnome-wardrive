@@ -6,37 +6,93 @@ on:
       - 'v*'
 
 jobs:
-  release:
+  build:
     runs-on: ubuntu-latest
     container:
       image: bilelmoussaoui/flatpak-github-actions:gnome-46
       options: --privileged
+    strategy:
+      matrix:
+        arch: [x86_64, aarch64]
     
     steps:
     - uses: actions/checkout@v4
     
-    - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+    - name: Build Flatpak
+      uses: flatpak/flatpak-github-actions/flatpak-builder@v6
       with:
-        bundle: com.andrewstclair.Wardrive.flatpak
+        bundle: com.andrewstclair.Wardrive-${{ matrix.arch }}.flatpak
         manifest-path: com.andrewstclair.Wardrive.yml
-        cache-key: flatpak-builder-${{ github.sha }}
+        cache-key: flatpak-builder-${{ matrix.arch }}-${{ github.sha }}
+        arch: ${{ matrix.arch }}
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: flatpak-${{ matrix.arch }}
+        path: com.andrewstclair.Wardrive-${{ matrix.arch }}.flatpak
+        retention-days: 1
+  
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: artifacts
     
     - name: Create Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      id: create_release
+      uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        tag_name: ${{ github.ref_name }}
+        name: Release ${{ github.ref_name }}
         draft: false
         prerelease: false
-    
-    - name: Upload Flatpak Bundle
-      uses: actions/upload-release-asset@v1
+        files: |
+          artifacts/flatpak-x86_64/com.andrewstclair.Wardrive-x86_64.flatpak
+          artifacts/flatpak-aarch64/com.andrewstclair.Wardrive-aarch64.flatpak
+        body: |
+          ## GNOME Wardrive ${{ github.ref_name }}
+          
+          A modern GNOME WiFi wardriving application with mobile-first design.
+          
+          ### 📦 Multi-Architecture Support
+          
+          This release includes Flatpak bundles for multiple architectures:
+          - **x86_64**: For Intel/AMD 64-bit systems (most desktops/laptops)  
+          - **aarch64**: For ARM 64-bit systems (mobile devices, ARM SBCs)
+          
+          ### 🚀 Installation
+          
+          1. Download the appropriate .flatpak file for your architecture
+          2. Install: `flatpak install com.andrewstclair.Wardrive-{arch}.flatpak`
+          3. Run: `flatpak run com.andrewstclair.Wardrive`
+          
+          ### ✨ Features
+          
+          - 📡 Portable WiFi scanning (works in Flatpak sandboxes)
+          - 📍 GPS location tracking via GeoClue  
+          - 💾 Multiple export formats (CSV, KML, GPX)
+          - 🎨 Modern GTK4/Libadwaita interface
+          - 📱 Mobile-optimized responsive design
+          
+          ### 🔧 System Requirements
+          
+          - Flatpak runtime support
+          - GNOME Platform 46
+          - NetworkManager (for WiFi scanning)
+          - GeoClue2 (for GPS location)
+          
+          ### 🏗️ Architecture Detection
+          
+          If you're unsure which architecture to download:
+          - Run `uname -m` to check your system architecture
+          - `x86_64` = Download the x86_64 version
+          - `aarch64` or `arm64` = Download the aarch64 version
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: com.andrewstclair.Wardrive.flatpak
-        asset_name: com.andrewstclair.Wardrive.flatpak
-        asset_content_type: application/octet-stream

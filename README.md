@@ -74,7 +74,31 @@ flatpak-builder --run build-dir com.andrewstclair.Wardrive.yml gnome-wardrive
 
 ## Installation
 
-Install from Flathub (coming soon) or build from source.
+### Multi-Architecture Flatpak Bundles
+
+Pre-built Flatpak bundles are available for multiple architectures from GitHub Actions or Releases:
+
+**Supported Architectures:**
+- **x86_64**: Intel/AMD 64-bit systems (most desktops and laptops)
+- **aarch64**: ARM 64-bit systems (mobile devices, Raspberry Pi, ARM SBCs)
+
+**Installation Steps:**
+1. **Check your architecture**: `uname -m`
+2. **Download** the appropriate bundle from [Releases](https://github.com/andrew-stclair/gnome-wardrive/releases) or [Actions](https://github.com/andrew-stclair/gnome-wardrive/actions)
+3. **Install**: `flatpak install com.andrewstclair.Wardrive-{arch}.flatpak` 
+4. **Run**: `flatpak run com.andrewstclair.Wardrive`
+
+**Architecture Selection:**
+- If `uname -m` shows `x86_64` → Download `com.andrewstclair.Wardrive-x86_64.flatpak`
+- If `uname -m` shows `aarch64` or `arm64` → Download `com.andrewstclair.Wardrive-aarch64.flatpak`
+
+### From Source
+
+Build from source for development or custom configurations (see Building section above).
+
+### Multi-Architecture Details
+
+For comprehensive information about architecture support, compatibility, and troubleshooting, see [MULTI_ARCH.md](MULTI_ARCH.md).
 
 ## Privacy and Legal Considerations
 
