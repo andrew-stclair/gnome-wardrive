@@ -27,7 +27,7 @@ jobs:
           ninja-build \
           appstream-util \
           desktop-file-utils \
-          glib-compile-schemas
+          libglib2.0-bin
     
     - name: Install Python dependencies
       run: |
@@ -46,7 +46,7 @@ jobs:
   flatpak:
     runs-on: ubuntu-latest
     container:
-      image: bilelmoussaoui/flatpak-github-actions:gnome-48
+      image: bilelmoussaoui/flatpak-github-actions:gnome-46
       options: --privileged
     
     steps:
