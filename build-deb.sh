@@ -30,7 +30,7 @@ sudo apt-get install -y \
     gir1.2-nm-1.0 \
     gir1.2-geoclue-2.0 \
     libnm-dev \
-    libgio-2.0-dev-bin \
+    libglib2.0-dev \
     desktop-file-utils \
     appstream-util \
     build-essential \

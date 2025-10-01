@@ -16,7 +16,7 @@ Build-Depends: debhelper-compat (= 13),
                gir1.2-nm-1.0,
                gir1.2-geoclue-2.0,
                libnm-dev,
-               libgio-2.0-dev-bin,
+               libglib2.0-dev,
                desktop-file-utils,
                appstream-util
 Standards-Version: 4.6.2

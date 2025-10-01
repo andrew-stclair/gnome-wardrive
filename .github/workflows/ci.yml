@@ -24,8 +24,17 @@ jobs:
       run: |
         meson setup builddir
         meson compile -C builddir
-        python3 test-wifi-scanning.py
-        python3 -c "import sys; sys.path.insert(0, 'src'); import main"
+        
+        # Test basic imports (WiFi scanning won't work in CI without hardware)
+        python3 -c "import sys; sys.path.insert(0, 'src'); import main; print('✅ main.py imports successfully')"
+        
+        # Test that the built executable exists
+        if [ -f builddir/src/gnome-wardrive ]; then
+          echo "✅ Executable built successfully"
+        else
+          echo "❌ Executable not found"
+          exit 1
+        fi
 
   build-deb:
     runs-on: ubuntu-latest
@@ -38,7 +47,7 @@ jobs:
         sudo apt update
         sudo apt install -y debhelper dh-python python3-all meson ninja-build pkg-config \
           libgtk-4-dev libadwaita-1-dev python-gi-dev gir1.2-gtk-4.0 gir1.2-adw-1 \
-          gir1.2-nm-1.0 gir1.2-geoclue-2.0 libnm-dev libgio-2.0-dev-bin desktop-file-utils \
+          gir1.2-nm-1.0 gir1.2-geoclue-2.0 libnm-dev libglib2.0-dev desktop-file-utils \
           appstream-util build-essential devscripts python3-requests python3-gpxpy gettext
     
     - name: Build Debian package
