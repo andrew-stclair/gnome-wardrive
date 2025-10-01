@@ -4,11 +4,13 @@ A modern GNOME application for WiFi wardriving built with Python, GTK4, and Liba
 
 ## Features
 
-- **Native GNOME integration** with Libadwaita
+- **Mobile-First Design** - Adaptive interface optimized for phones and tablets
 - **Portable WiFi monitoring** using NetworkManager (works in Flatpak sandboxes)
 - **GPS location tracking** via GeoClue
 - **Multiple export formats** (CSV, KML, GPX)
-- **Modern GTK4 interface** designed for mobile and desktop
+- **Touch-friendly controls** with 48px minimum touch targets
+- **Responsive layout** that adapts from 320px to desktop sizes
+- **Native GNOME integration** with Libadwaita
 - **Flatpak packaging** for easy cross-platform distribution
 
 ## WiFi Scanning
@@ -74,6 +76,15 @@ flatpak-builder --run build-dir com.andrewstclair.Wardrive.yml gnome-wardrive
 
 Install from Flathub (coming soon) or build from source.
 
+## Privacy and Legal Considerations
+
+This application collects GPS location data and WiFi network information. Users are responsible for:
+- Compliance with local laws regarding WiFi scanning
+- Following privacy regulations in their jurisdiction
+- Securing any exported data containing sensitive information
+
+See [PRIVACY.md](PRIVACY.md) for detailed privacy guidelines and data handling practices.
+
 ## License
 
 GPL-3.0+
@@ -81,3 +92,5 @@ GPL-3.0+
 ## Contributing
 
 Contributions are welcome! Please read our contributing guidelines and submit pull requests.
+
+**Important for contributors**: Follow the privacy guidelines in [PRIVACY.md](PRIVACY.md) and [.github/.copilot-instructions.md](.github/.copilot-instructions.md) to ensure no personally identifiable information is committed to the repository.

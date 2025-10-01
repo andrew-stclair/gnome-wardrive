@@ -1,8 +1,38 @@
 /* Custom CSS for GNOME Wardrive */
 
-/* Main window styling */
+/* Mobile-optimized styling */
 .wardrive-window {
   background-color: @window_bg_color;
+}
+
+/* Mobile-friendly touch targets */
+.mobile-button {
+  min-width: 48px;
+  min-height: 48px;
+  margin: 6px;
+}
+
+/* Mobile-specific responsive styles */
+.header-title-small {
+  font-size: 1.1em;
+}
+
+.network-row-mobile {
+  padding: 12px 16px;
+}
+
+.action-bar-mobile {
+  padding: 12px;
+}
+
+/* Navigation and toolbar styling */
+.toolbar-view {
+  background-color: @window_bg_color;
+}
+
+.status-card {
+  margin: 12px;
+  border-radius: 12px;
 }
 
 /* Network list styling */

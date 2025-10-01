@@ -17,7 +17,7 @@ except ImportError:
     from location_service import LocationService
     from data_manager import DataManager
 
-@Gtk.Template(resource_path='/com/andrewstclair/Wardrive/ui/window_simple.ui')
+@Gtk.Template(resource_path='/com/andrewstclair/Wardrive/ui/window_mobile.ui')
 class WardriveWindow(Adw.ApplicationWindow):
     """Main application window"""
     
@@ -26,10 +26,12 @@ class WardriveWindow(Adw.ApplicationWindow):
     # Template children - these will be populated from the UI file
     header_bar = Gtk.Template.Child()
     networks_listbox = Gtk.Template.Child()
-    status_label = Gtk.Template.Child()
-    location_label = Gtk.Template.Child()
     scan_button = Gtk.Template.Child()
     export_button = Gtk.Template.Child()
+    networks_count_label = Gtk.Template.Child()
+    empty_networks_row = Gtk.Template.Child()
+    devices_count_label = Gtk.Template.Child()
+    location_label = Gtk.Template.Child()
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -45,8 +47,41 @@ class WardriveWindow(Adw.ApplicationWindow):
         # Initialize UI state
         self.setup_ui()
         
+        # Mobile-specific initialization
+        self.setup_mobile_ui()
+        
         # Show scanning mode info
         self.show_scanning_info()
+        
+    def setup_mobile_ui(self):
+        """Configure mobile-specific UI elements"""
+        # Track network count
+        self.network_count = 0
+        
+        # Initialize mobile status indicators
+        self.update_networks_count(0)
+        self.update_location_accuracy("No GPS")
+        self.update_devices_count()
+        
+        # Set up responsive behavior
+        self.setup_adaptive_behavior()
+        
+    def setup_adaptive_behavior(self):
+        """Set up adaptive UI behavior for different screen sizes"""
+        # Connect to size changes for responsive design
+        self.connect('notify::default-width', self._on_size_changed)
+        self.connect('notify::default-height', self._on_size_changed)
+        
+    def _on_size_changed(self, *args):
+        """Handle window size changes for responsive design"""
+        # Get current size
+        width = self.get_default_width()
+        
+        # Adjust UI for very narrow screens (< 400px)
+        if width < 400:
+            self.scan_button.set_label("Scan")
+        else:
+            self.scan_button.set_label("Start Scan")
         
     def show_scanning_info(self):
         """Display information about WiFi scanning capabilities"""
@@ -55,13 +90,51 @@ class WardriveWindow(Adw.ApplicationWindow):
         
     def _check_scanning_mode(self):
         """Check and display the current WiFi scanning mode"""
+        # Update devices count display instead of status label
+        self.update_devices_count()
+        return False  # Don't repeat
+        
+    def update_networks_count(self, count):
+        """Update the networks count display"""
+        self.network_count = count
+        if count == 0:
+            self.networks_count_label.set_text("No networks")
+            self.empty_networks_row.set_visible(True)
+        elif count == 1:
+            self.networks_count_label.set_text("1 network")
+            self.empty_networks_row.set_visible(False)
+        else:
+            self.networks_count_label.set_text(f"{count} networks")
+            self.empty_networks_row.set_visible(False)
+            
+    def update_location_accuracy(self, status):
+        """Update location accuracy display - now just logs the status"""
+        # Location accuracy information no longer displayed in UI
+        # This method is kept for compatibility but doesn't update UI elements
+        print(f"Location accuracy: {status}")
+            
+    def update_devices_count(self):
+        """Update WiFi devices count display"""
         if hasattr(self, 'wifi_scanner') and self.wifi_scanner.wifi_devices:
             device_count = len(self.wifi_scanner.wifi_devices)
-            self.status_label.set_text(
-                f"📡 WiFi Monitor Ready • {device_count} device(s) • "
-                f"Passive scanning mode (Flatpak compatible)"
-            )
-        return False  # Don't repeat
+            if device_count == 1:
+                self.devices_count_label.set_text("1 device")
+            else:
+                self.devices_count_label.set_text(f"{device_count} devices")
+        else:
+            self.devices_count_label.set_text("0 devices")
+            
+    def set_scanning_active(self, active):
+        """Update UI to show scanning state"""
+        if active:
+            self.scan_button.set_label("Stop Scan")
+            self.scan_button.remove_css_class("suggested-action")
+            self.scan_button.add_css_class("destructive-action")
+        else:
+            self.scan_button.set_label("Start Scan")
+            self.scan_button.remove_css_class("destructive-action") 
+            self.scan_button.add_css_class("suggested-action")
+            self.update_devices_count()
         
     def setup_signals(self):
         """Connect widget signals"""
@@ -77,8 +150,7 @@ class WardriveWindow(Adw.ApplicationWindow):
         """Initialize UI state"""
         self.scan_button.set_label('Start Scanning')
         self.export_button.set_sensitive(False)
-        self.status_label.set_text('Ready to scan')
-        self.location_label.set_text('Location: Unknown')
+        self.location_label.set_text('Unknown')
         
         # Start location service
         self.location_service.start()
@@ -87,12 +159,10 @@ class WardriveWindow(Adw.ApplicationWindow):
         """Handle scan button click"""
         if self.wifi_scanner.is_scanning:
             self.wifi_scanner.stop_scan()
-            button.set_label('Start Scanning')
-            self.status_label.set_text('Scan stopped')
+            self.set_scanning_active(False)
         else:
             self.wifi_scanner.start_scan()
-            button.set_label('Stop Scanning')
-            self.status_label.set_text('Scanning...')
+            self.set_scanning_active(True)
             
     def on_export_clicked(self, button):
         """Handle export button click"""
@@ -106,41 +176,75 @@ class WardriveWindow(Adw.ApplicationWindow):
         # Save to data manager
         self.data_manager.add_network(network_data)
         
-        # Update UI
+        # Update mobile UI
         network_count = self.data_manager.get_network_count()
-        self.status_label.set_text(f'Found {network_count} networks')
+        self.update_networks_count(network_count)
         
         if network_count > 0:
             self.export_button.set_sensitive(True)
             
     def on_scan_completed(self, scanner):
         """Handle scan completion"""
-        self.scan_button.set_label('Start Scanning')
+        self.set_scanning_active(False)
         network_count = self.data_manager.get_network_count()
-        self.status_label.set_text(f'Scan complete - {network_count} networks found')
+        self.update_networks_count(network_count)
         
-    def on_location_updated(self, service, latitude, longitude, accuracy):
+    def on_location_updated(self, service, latitude, longitude, accuracy, altitude=0.0):
         """Handle location update"""
-        self.location_label.set_text(f'Location: {latitude:.6f}, {longitude:.6f} (±{accuracy}m)')
+        # Update location display with lat, long, and altitude
+        if altitude != 0.0:
+            location_text = f"{latitude:.4f}, {longitude:.4f}, {altitude:.0f}m"
+        else:
+            location_text = f"{latitude:.4f}, {longitude:.4f}"
+        
+        self.location_label.set_text(location_text)
+        
+        # Update mobile accuracy display
+        if accuracy == 0:
+            accuracy_text = "High accuracy"
+        elif accuracy <= 10:
+            accuracy_text = f"±{accuracy}m"
+        else:
+            accuracy_text = f"±{accuracy}m (low)"
+        self.update_location_accuracy(accuracy_text)
+        
         self.data_manager.update_location(latitude, longitude, accuracy)
         
     def add_network_to_list(self, network_data):
         """Add a network to the networks list"""
         row = Adw.ActionRow()
-        row.set_title(network_data.get('ssid', 'Hidden Network'))
         
-        subtitle = f"BSSID: {network_data.get('bssid', 'Unknown')}"
-        if 'signal_strength' in network_data:
-            subtitle += f" | Signal: {network_data['signal_strength']} dBm"
-        if 'security' in network_data:
-            subtitle += f" | Security: {network_data['security']}"
-            
+        # Set network name
+        ssid = network_data.get('ssid', 'Hidden Network')
+        row.set_title(ssid)
+        
+        # Create mobile-friendly subtitle
+        bssid = network_data.get('bssid', 'Unknown')
+        signal = network_data.get('signal_strength', 0)
+        security = network_data.get('security', 'Unknown')
+        
+        subtitle = f"{bssid[-8:]} • {signal}% • {security}"
         row.set_subtitle(subtitle)
         
-        # Add security icon
-        if network_data.get('security') != 'Open':
-            icon = Gtk.Image.new_from_icon_name('security-high-symbolic')
-            row.add_suffix(icon)
+        # Set network type icon
+        if security == 'Open':
+            row.set_icon_name('network-wireless-symbolic')
+        else:
+            row.set_icon_name('network-wireless-encrypted-symbolic')
+            
+        # Add signal strength indicator
+        signal_icon = Gtk.Image()
+        if signal >= 70:
+            signal_icon.set_from_icon_name('network-wireless-signal-excellent-symbolic')
+        elif signal >= 50:
+            signal_icon.set_from_icon_name('network-wireless-signal-good-symbolic')
+        elif signal >= 30:
+            signal_icon.set_from_icon_name('network-wireless-signal-ok-symbolic')
+        else:
+            signal_icon.set_from_icon_name('network-wireless-signal-weak-symbolic')
+            
+        signal_icon.add_css_class('dim-label')
+        row.add_suffix(signal_icon)
             
         self.networks_listbox.append(row)
         

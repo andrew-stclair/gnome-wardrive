@@ -2,11 +2,11 @@
 <schemalist>
   <schema path="/com/andrewstclair/Wardrive/" id="com.andrewstclair.Wardrive" gettext-domain="gnome-wardrive">
     <key name="window-width" type="i">
-      <default>800</default>
+      <default>360</default>
       <summary>Default window width</summary>
     </key>
     <key name="window-height" type="i">
-      <default>600</default>
+      <default>640</default>
       <summary>Default window height</summary>
     </key>
     <key name="window-maximized" type="b">

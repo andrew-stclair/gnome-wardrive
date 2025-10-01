@@ -7,16 +7,17 @@
   
   <description>
     <p>
-      GNOME Wardrive is a modern WiFi wardriving application built for the GNOME desktop.
-      It allows you to discover and map WiFi networks while recording their locations using GPS.
+      GNOME Wardrive is a modern WiFi wardriving application designed for both mobile and desktop GNOME environments.
+      It allows you to discover and map WiFi networks while recording their locations using GPS, with a touch-friendly adaptive interface.
     </p>
     <p>Features:</p>
     <ul>
-      <li>Real-time WiFi network scanning using NetworkManager</li>
+      <li>Portable WiFi network monitoring (no special permissions required)</li>
       <li>GPS location tracking via GeoClue</li>
       <li>Export data in CSV, KML, and GPX formats</li>
-      <li>Modern GTK4 interface with Libadwaita</li>
-      <li>Native GNOME integration</li>
+      <li>Adaptive GTK4 interface optimized for mobile devices</li>
+      <li>Native GNOME integration with Libadwaita</li>
+      <li>Touch-friendly controls and responsive design</li>
     </ul>
   </description>
   
@@ -46,13 +47,19 @@
   </keywords>
   
   <requires>
-    <display_length compare="ge">360</display_length>
+    <display_length compare="ge">320</display_length>
+    <internet>offline-only</internet>
   </requires>
   
-  <recommends>
+  <supports>
     <control>keyboard</control>
     <control>pointing</control>
     <control>touch</control>
+  </supports>
+  
+  <recommends>
+    <control>touch</control>
+    <control>pointing</control>
   </recommends>
   
   <content_rating type="oars-1.1"/>

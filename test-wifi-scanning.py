@@ -39,12 +39,15 @@ def test_wifi_scanning():
         
         print(f"📶 {device.get_iface()}: {device_networks} networks visible")
         
-        # Show first few networks as examples
+        # Show first few networks as examples (names redacted for privacy)
         for i, ap in enumerate(access_points[:3]):
             ssid_bytes = ap.get_ssid()
-            ssid = ssid_bytes.get_data().decode('utf-8') if ssid_bytes else f"Hidden_{ap.get_bssid()}"
+            has_ssid = ssid_bytes is not None and len(ssid_bytes.get_data()) > 0
             strength = ap.get_strength()
-            print(f"   • {ssid} ({strength}% signal)")
+            if has_ssid:
+                print(f"   • Network_{i+1} ({strength}% signal)")
+            else:
+                print(f"   • Hidden_Network_{i+1} ({strength}% signal)")
     
     print(f"✅ Total networks detected: {total_networks}")
     

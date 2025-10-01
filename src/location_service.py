@@ -12,7 +12,7 @@ class LocationService(GObject.GObject):
     """Location service using GeoClue"""
     
     __gsignals__ = {
-        'location-updated': (GObject.SIGNAL_RUN_FIRST, None, (float, float, float)),
+        'location-updated': (GObject.SIGNAL_RUN_FIRST, None, (float, float, float, float)),
         'location-error': (GObject.SIGNAL_RUN_FIRST, None, (str,)),
     }
     
@@ -174,15 +174,27 @@ class LocationService(GObject.GObject):
             longitude = location_proxy.get_cached_property('Longitude').get_double()
             accuracy = location_proxy.get_cached_property('Accuracy').get_double()
             
+            # Try to get altitude (may not be available on all systems)
+            altitude = 0.0
+            try:
+                altitude_prop = location_proxy.get_cached_property('Altitude')
+                if altitude_prop:
+                    altitude = altitude_prop.get_double()
+            except:
+                altitude = 0.0  # Altitude not available
+            
             # Update current location
             self.current_latitude = latitude
             self.current_longitude = longitude
             self.current_accuracy = accuracy
             
             # Emit location update
-            self.emit('location-updated', latitude, longitude, accuracy)
+            self.emit('location-updated', latitude, longitude, accuracy, altitude)
             
-            print(f"✅ Location: {latitude:.6f}, {longitude:.6f} (±{accuracy}m)")
+            if altitude != 0.0:
+                print(f"✅ Location updated: coordinates available with {altitude:.1f}m altitude (±{accuracy}m accuracy)")
+            else:
+                print(f"✅ Location updated: coordinates available (±{accuracy}m accuracy)")
             
         except Exception as e:
             print(f"❌ Error getting location from path: {e}")

@@ -3,6 +3,7 @@
   <gresource prefix="/com/andrewstclair/Wardrive">
     <file compressed="true">ui/window.ui</file>
     <file compressed="true">ui/window_simple.ui</file>
+    <file compressed="true">ui/window_mobile.ui</file>
     <file compressed="true">style.css</file>
   </gresource>
 </gresources>
