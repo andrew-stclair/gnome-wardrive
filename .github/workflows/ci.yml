@@ -48,13 +48,18 @@ jobs:
       run: meson test -C builddir
 
   flatpak:
-    runs-on: ubuntu-latest
-    container:
-      image: bilelmoussaoui/flatpak-github-actions:gnome-nightly
-      options: --privileged
     strategy:
       matrix:
-        arch: [x86_64, aarch64]
+        include:
+          - arch: x86_64
+            runner: ubuntu-latest
+          - arch: aarch64  
+            runner: ubuntu-24.04-arm64
+      fail-fast: false
+    runs-on: ${{ matrix.runner }}
+    container:
+      image: bilelmoussaoui/flatpak-github-actions:freedesktop-22.08
+      options: --privileged
     
     steps:
     - uses: actions/checkout@v4

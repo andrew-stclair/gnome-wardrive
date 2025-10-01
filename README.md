@@ -1,17 +1,18 @@
 # GNOME Wardrive
 
-A modern GNOME application for WiFi wardriving built with Python, GTK4, and Libadwaita.
+A modern GNOME application for WiFi wardriving built with Python, GTK4, and Libadwaita.  
+**Optimized for Linux mobile devices** like PinePhone, Librem 5, and postmarketOS.
 
 ## Features
 
-- **Mobile-First Design** - Adaptive interface optimized for phones and tablets
-- **Portable WiFi monitoring** using NetworkManager (works in Flatpak sandboxes)
-- **GPS location tracking** via GeoClue
-- **Multiple export formats** (CSV, KML, GPX)
-- **Touch-friendly controls** with 48px minimum touch targets
-- **Responsive layout** that adapts from 320px to desktop sizes
-- **Native GNOME integration** with Libadwaita
-- **Flatpak packaging** for easy cross-platform distribution
+- **📱 Mobile Linux First** - Native ARM64 builds for PinePhone, Librem 5, postmarketOS devices
+- **🔄 Adaptive Interface** - Touch-optimized UI that works from 320px phone screens to desktop
+- **📡 Portable WiFi Scanning** - Uses NetworkManager D-Bus (works in Flatpak sandboxes, no root needed)
+- **🌍 GPS Location Tracking** - Native GeoClue integration for accurate positioning
+- **💾 Multiple Export Formats** - CSV, KML, GPX for analysis and mapping
+- **👆 Touch-Friendly Design** - 48px minimum touch targets, bottom action bars
+- **🎨 Native GNOME Integration** - Libadwaita styling, adaptive layouts
+- **📦 Cross-Platform Packaging** - Flatpak bundles for x86_64 and aarch64
 
 ## WiFi Scanning
 
@@ -95,6 +96,10 @@ Pre-built Flatpak bundles are available for multiple architectures from GitHub A
 ### From Source
 
 Build from source for development or custom configurations (see Building section above).
+
+### 📱 Mobile Linux Installation
+
+For detailed mobile device installation, optimization, and troubleshooting, see [MOBILE_LINUX.md](MOBILE_LINUX.md).
 
 ### Multi-Architecture Details
 
