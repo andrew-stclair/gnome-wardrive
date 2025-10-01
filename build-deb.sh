@@ -25,7 +25,8 @@ sudo apt-get install -y \
     pkg-config \
     libgtk-4-dev \
     libadwaita-1-dev \
-    python3-gi-dev \
+    python3-dev \
+    libgirepository1.0-dev \
     gir1.2-gtk-4.0 \
     gir1.2-adw-1 \
     gir1.2-nm-1.0 \

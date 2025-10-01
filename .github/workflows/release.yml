@@ -7,15 +7,7 @@ on:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        include:
-          - arch: amd64
-            runner: ubuntu-latest
-          - arch: arm64  
-            runner: ubuntu-24.04-arm
-      fail-fast: false
-    runs-on: ${{ matrix.runner }}
+    runs-on: ubuntu-latest
     
     steps:
     - uses: actions/checkout@v4
@@ -24,8 +16,8 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y debhelper dh-python meson ninja-build libgtk-4-dev \
-          libadwaita-1-dev python3-gi-dev gir1.2-gtk-4.0 gir1.2-adw-1 gir1.2-nm-1.0 \
-          gir1.2-geoclue-2.0 build-essential devscripts python3-requests python3-gpxpy
+          libadwaita-1-dev python3-dev libgirepository1.0-dev gir1.2-gtk-4.0 gir1.2-adw-1 \
+          gir1.2-nm-1.0 gir1.2-geoclue-2.0 build-essential devscripts python3-requests python3-gpxpy
     
     - name: Build Debian package
       run: |
@@ -35,8 +27,8 @@ jobs:
         # Set up meson build first to ensure everything is configured
         meson setup builddir --buildtype=release
         
-        # Build the Debian package using debuild
-        debuild -us -uc -b --target-arch=${{ matrix.arch }}
+        # Build the Debian package using debuild (architecture-independent)
+        debuild -us -uc -b
         
         # Verify the package was built and contains the application
         if [ -f ../gnome-wardrive_*.deb ]; then
@@ -50,7 +42,7 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: deb-${{ matrix.arch }}
+        name: deb-all
         path: ../*.deb
         retention-days: 1
   
@@ -75,20 +67,15 @@ jobs:
         draft: false
         prerelease: false
         files: |
-          artifacts/deb-amd64/*.deb
-          artifacts/deb-arm64/*.deb
+          artifacts/deb-all/*.deb
         body: |
           ## GNOME Wardrive ${{ github.ref_name }}
           
           WiFi wardriving application with native Debian packaging.
           
-          **Download the appropriate architecture:**
-          - **amd64**: Intel/AMD 64-bit systems  
-          - **arm64**: ARM 64-bit systems (mobile devices)
-          
           **Installation:**
           ```bash
-          sudo dpkg -i gnome-wardrive_*_{arch}.deb
+          sudo dpkg -i gnome-wardrive_*.deb
           sudo apt-get install -f
           gnome-wardrive
           ```
