@@ -59,9 +59,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Install pyyaml for manifest validation
-      run: pip3 install pyyaml
-
     - name: Validate manifest for architecture
       run: |
         echo "🔍 Validating Flatpak manifest for ${{ matrix.arch }} architecture..."
@@ -72,8 +69,13 @@ jobs:
           echo "✅ Manifest is architecture-independent"
         fi
         
-        # Validate manifest syntax
-        python3 -c "import yaml; yaml.safe_load(open('com.andrewstclair.Wardrive.yml', 'r')); print('✅ Manifest YAML syntax is valid')"
+        # Validate manifest syntax using flatpak-builder's built-in validation
+        if flatpak-builder --show-manifest com.andrewstclair.Wardrive.yml > /dev/null 2>&1; then
+          echo "✅ Manifest YAML syntax is valid"
+        else
+          echo "❌ Manifest YAML syntax error"
+          exit 1
+        fi
     
     - name: Build Flatpak
       uses: flatpak/flatpak-github-actions/flatpak-builder@v6
