@@ -6,6 +6,9 @@
 override_dh_auto_configure:
 	dh_auto_configure -- --buildtype=release --prefix=/usr
 
+override_dh_auto_install:
+	dh_auto_install --destdir=debian/tmp
+
 override_dh_auto_test:
 	# Skip tests for now as they may require special setup
 
