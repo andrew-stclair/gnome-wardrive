@@ -61,16 +61,21 @@ jobs:
         # Build the Debian package using debuild (architecture-independent)
         debuild -us -uc -b
         
+        # Move .deb file to workspace for artifact upload
+        echo "📦 Moving .deb files to workspace..."
+        mv ../*.deb . || echo "Warning: Could not move .deb files"
+        ls -la *.deb || echo "No .deb files found in workspace after move"
+        
         # Verify the package was built and contains the application
-        if [ -f ../gnome-wardrive_*.deb ]; then
+        if [ -f gnome-wardrive_*.deb ]; then
           echo "✅ Package built successfully:"
-          ls -la ../gnome-wardrive_*.deb
+          ls -la gnome-wardrive_*.deb
           echo "📋 Package contents:"
-          dpkg-deb --contents ../gnome-wardrive_*.deb | grep -E "(gnome-wardrive|\.py)" || echo "No Python files found in package!"
+          dpkg-deb --contents gnome-wardrive_*.deb | grep -E "(gnome-wardrive|\.py)" || echo "No Python files found in package!"
           
           # Test package installation in isolated environment
           echo "🧪 Testing package installation..."
-          sudo dpkg -i ../gnome-wardrive_*.deb || echo "Package installation failed, trying to fix dependencies..."
+          sudo dpkg -i gnome-wardrive_*.deb || echo "Package installation failed, trying to fix dependencies..."
           sudo apt-get install -f -y
           
           # Test that the executable exists and is properly installed
@@ -104,6 +109,8 @@ jobs:
           fi
         else
           echo "❌ No .deb package found!"
+          ls -la . || true
+          ls -la .. || true
           exit 1
         fi
     
@@ -112,7 +119,7 @@ jobs:
       if: always()  # Upload even if tests fail
       with:
         name: gnome-wardrive-deb
-        path: ../*.deb
+        path: "*.deb"
         if-no-files-found: warn
         retention-days: 30
     
