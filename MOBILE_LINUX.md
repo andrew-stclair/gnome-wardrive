@@ -111,11 +111,11 @@ For extended mobile wardriving sessions:
 3. **Use airplane mode + WiFi** to disable cellular radio
 4. **Close unnecessary background apps**
 
-### Permission Requirements
-The app uses D-Bus interfaces that work in Flatpak sandboxes:
+### System Requirements
+The app uses native D-Bus interfaces:
 - **NetworkManager access**: Passive WiFi scanning (no special permissions)
 - **GeoClue access**: GPS location services
-- **Home directory access**: For exporting scan data
+- **File system access**: For exporting scan data
 
 ## 📊 Mobile Wardriving Tips
 

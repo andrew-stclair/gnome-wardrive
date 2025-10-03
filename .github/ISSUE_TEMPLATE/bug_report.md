@@ -26,7 +26,7 @@ If applicable, add screenshots to help explain your problem.
 **Environment:**
  - OS: [e.g. Ubuntu 22.04, Fedora 38]
  - GNOME Version: [e.g. 46, 47, 48]
- - Installation method: [e.g. Flatpak, built from source]
+ - Installation method: [e.g. Debian package, built from source]
  - Application Version: [e.g. 1.0.0]
 
 **NetworkManager version:**
