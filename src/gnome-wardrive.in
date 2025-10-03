@@ -37,14 +37,17 @@ if __name__ == '__main__':
                 resource = Gio.Resource.load(gresource_path)
                 resource._register()
                 resource_loaded = True
+                print(f"Loaded gresource from: {gresource_path}", file=sys.stderr)
                 break
             except Exception as e:
+                print(f"Failed to load gresource from {gresource_path}: {e}", file=sys.stderr)
                 continue
     
     if not resource_loaded:
-        print("Warning: Could not load gresource file. UI may not display correctly.")
-        print(f"Searched paths: {possible_paths}")
-        print(f"pkgdatadir contents: {os.listdir(pkgdatadir) if os.path.exists(pkgdatadir) else 'Directory not found'}")
+        print("ERROR: Could not load gresource file. UI will not display correctly.", file=sys.stderr)
+        print(f"Searched paths: {possible_paths}", file=sys.stderr)
+        print(f"pkgdatadir contents: {os.listdir(pkgdatadir) if os.path.exists(pkgdatadir) else 'Directory not found'}", file=sys.stderr)
+        sys.exit(1)
 
     # Now import the application modules after gresource is loaded
     from gnome_wardrive.main import main
