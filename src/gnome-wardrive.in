@@ -25,7 +25,9 @@ if __name__ == '__main__':
     # This is critical because the window template decorators require the gresource to be loaded
     possible_paths = [
         os.path.join(pkgdatadir, 'gnome-wardrive.gresource'),
-        'gnome-wardrive.gresource'  # Development fallback
+        os.path.join(os.path.dirname(__file__), '..', 'builddir', 'data', 'gnome-wardrive.gresource'),  # Development build
+        os.path.join(os.path.dirname(__file__), '..', 'data', 'gnome-wardrive.gresource'),  # Development fallback
+        'gnome-wardrive.gresource'  # Current directory fallback
     ]
     
     resource_loaded = False

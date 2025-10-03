@@ -18,16 +18,32 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 # Set up environment for GResource
 os.environ['GSETTINGS_SCHEMA_DIR'] = os.path.join(os.path.dirname(__file__), 'data')
 
-# Load GResource
-resource_path = os.path.join(os.path.dirname(__file__), 'builddir', 'data', 'gnome-wardrive.gresource')
-if os.path.exists(resource_path):
-    import gi
-    from gi.repository import Gio
-    resource = Gio.Resource.load(resource_path)
-    resource._register()
-else:
-    print(f"Warning: GResource file not found at {resource_path}")
-    print("Make sure to build the project first with: meson setup builddir && ninja -C builddir")
+# Load GResource from multiple possible locations
+import gi
+from gi.repository import Gio
+
+possible_resource_paths = [
+    os.path.join(os.path.dirname(__file__), 'builddir', 'data', 'gnome-wardrive.gresource'),
+    os.path.join(os.path.dirname(__file__), 'data', 'gnome-wardrive.gresource'),
+]
+
+resource_loaded = False
+for resource_path in possible_resource_paths:
+    if os.path.exists(resource_path):
+        try:
+            resource = Gio.Resource.load(resource_path)
+            resource._register()
+            print(f"✓ GResource loaded from {resource_path}")
+            resource_loaded = True
+            break
+        except Exception as e:
+            print(f"✗ Failed to load resource from {resource_path}: {e}")
+
+if not resource_loaded:
+    print(f"Warning: GResource file not found. Tried:")
+    for path in possible_resource_paths:
+        print(f"  - {path}")
+    print("Make sure to build the project first with: meson setup builddir && meson compile -C builddir")
 
 if __name__ == '__main__':
     try:

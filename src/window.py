@@ -95,8 +95,10 @@ class WardriveWindow(Adw.ApplicationWindow):
         
     def _check_scanning_mode(self):
         """Check and display the current WiFi scanning mode"""
-        # Update devices count display instead of status label
-        self.update_devices_count()
+        # Refresh WiFi devices and update display
+        if hasattr(self, 'wifi_scanner'):
+            self.wifi_scanner.refresh_wifi_devices()
+            self.update_devices_count()
         return False  # Don't repeat
         
     def update_networks_count(self, count):
@@ -194,11 +196,11 @@ class WardriveWindow(Adw.ApplicationWindow):
         network_count = self.data_manager.get_network_count()
         self.update_networks_count(network_count)
         
-    def on_location_updated(self, service, latitude, longitude, accuracy, altitude=0.0):
+    def on_location_updated(self, service, latitude, longitude, accuracy):
         """Handle location update"""
-        # Update location display with lat, long, and altitude
-        if altitude != 0.0:
-            location_text = f"{latitude:.4f}, {longitude:.4f}, {altitude:.0f}m"
+        # Update location display with lat, long, and accuracy
+        if accuracy > 0:
+            location_text = f"{latitude:.4f}, {longitude:.4f} (±{accuracy:.0f}m)"
         else:
             location_text = f"{latitude:.4f}, {longitude:.4f}"
         

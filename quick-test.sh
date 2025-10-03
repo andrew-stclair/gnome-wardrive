@@ -12,11 +12,14 @@ else
 fi
 echo ""
 
-# Compile resources if needed
-if [ ! -f "data/gnome-wardrive.gresource" ] || [ "data/gnome-wardrive.gresource.xml" -nt "data/gnome-wardrive.gresource" ]; then
-    echo "📦 Compiling UI resources..."
-    glib-compile-resources --target=data/gnome-wardrive.gresource --sourcedir=data data/gnome-wardrive.gresource.xml
+# Build the project if needed
+if [ ! -d "builddir" ]; then
+    echo "📦 Setting up build directory..."
+    meson setup builddir
 fi
+
+echo "🔨 Building project..."
+meson compile -C builddir
 
 # Run the application
 echo "🎯 Launching application..."
