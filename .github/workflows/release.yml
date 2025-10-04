@@ -38,7 +38,7 @@ jobs:
         # Fallback to '1' if PACKAGE_REVISION is not set
         PACKAGE_REVISION="${{ vars.PACKAGE_REVISION || '1' }}"
         # Fallback to 'stable' if PACKAGE_DISTRIBUTION is not set (recommended for release)
-        PACKAGE_DISTRIBUTION="${{ vars.PACKAGE_DISTRIBUTION || 'stable' }}"
+        PACKAGE_DISTRIBUTION="${{ vars.PACKAGE_DISTRIBUTION != '' && vars.PACKAGE_DISTRIBUTION || 'stable' }}"
         dch -b -v "${VERSION}-${PACKAGE_REVISION}" -D "${PACKAGE_DISTRIBUTION}" "Release version ${VERSION}"
         echo "Updated debian/changelog:"
         head -n 5 debian/changelog
