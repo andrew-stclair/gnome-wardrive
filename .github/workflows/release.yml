@@ -12,6 +12,33 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
+    - name: Extract version from tag
+      id: get_version
+      run: |
+        # Extract version from tag (remove 'v' prefix)
+        VERSION=${GITHUB_REF_NAME#v}
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Version: $VERSION"
+    
+    - name: Update version in meson.build
+      run: |
+        VERSION=${{ steps.get_version.outputs.version }}
+        sed -i "2s/version: '[^']*'/version: '$VERSION'/" meson.build
+        echo "Updated meson.build version to $VERSION"
+        grep "version:" meson.build
+    
+    - name: Update debian/changelog
+      run: |
+        VERSION=${{ steps.get_version.outputs.version }}
+        export DEBEMAIL="github-actions@example.com"
+        export DEBFULLNAME="GitHub Actions"
+        
+        # Update the version in debian/changelog
+        # Using -b to allow any version (including downgrades or prereleases)
+        dch -b -v "${VERSION}-1" -D unstable "Release version ${VERSION}"
+        echo "Updated debian/changelog:"
+        head -n 5 debian/changelog
+    
     - name: Install build dependencies
       run: |
         sudo apt update
