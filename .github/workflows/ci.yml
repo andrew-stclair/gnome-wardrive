@@ -52,8 +52,8 @@ jobs:
     
     - name: Build Debian package
       run: |
-        export DEBEMAIL="github-actions@example.com"
-        export DEBFULLNAME="GitHub Actions"
+        export DEBEMAIL="${{ vars.OWNER_EMAIL }}"
+        export DEBFULLNAME="${{ vars.OWNER_NAME }}"
         
         # Set up meson build first to ensure everything is configured
         meson setup builddir --buildtype=release
