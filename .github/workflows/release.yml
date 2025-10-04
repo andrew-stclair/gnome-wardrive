@@ -23,7 +23,7 @@ jobs:
     - name: Update version in meson.build
       run: |
         VERSION=${{ steps.get_version.outputs.version }}
-        sed -i "2s/version: '[^']*'/version: '$VERSION'/" meson.build
+        sed -i "s/\(project([^,]*,[^,]*version: '\)[^']*\('\)/\1$VERSION\2/" meson.build
         echo "Updated meson.build version to $VERSION"
         grep "version:" meson.build
     
